@@ -6,9 +6,8 @@
 <title>VendOps — Fleet Map</title>
 <style>
   :root{
-    --stone:#E4DED1;
-    --paper:#F2EFE8;
-    --paper-raised:#FAF8F3;
+    --paper:#FFFFFF;
+    --paper-raised:#F6F6F7;
     --ink:#17181B;
     --ink-soft:#5B5A54;
     --ink-faint:#9B978C;
@@ -16,57 +15,24 @@
     --line-strong: rgba(23,24,27,0.24);
     --cobalt:#1D3AE8;
     --cobalt-soft: rgba(29,58,232,0.12);
-    --cobalt-glass: rgba(64,92,240,0.16);
-    --ember:#E1551F;
-    --ember-soft: rgba(225,85,31,0.14);
-    --ember-glass: rgba(225,85,31,0.18);
-    --glass-fill: rgba(255,255,255,0.50);
-    --glass-fill-strong: rgba(255,255,255,0.72);
-    --glass-border: rgba(255,255,255,0.7);
-    --glass-shadow: 0 24px 46px -20px rgba(23,20,10,0.30), 0 1px 0 rgba(255,255,255,0.55) inset;
-    --scrim: rgba(20,18,14,0.38);
+    --cobalt-glass: rgba(64,92,240,0.14);
+    --b-good:#7C93F5;
+    --b-low:#4A66E6;
+    --b-empty:#1D3AE8;
+    --b-repair:#101B5E;
+    --glass-fill: rgba(255,255,255,0.62);
+    --glass-fill-strong: rgba(255,255,255,0.86);
+    --glass-border: rgba(29,58,232,0.14);
+    --glass-shadow: 0 24px 46px -22px rgba(23,20,10,0.24), 0 1px 0 rgba(255,255,255,0.6) inset;
+    --scrim: rgba(20,30,55,0.32);
     --display: "Helvetica Neue", Helvetica, Arial, sans-serif;
     --mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, Consolas, monospace;
-  }
-  :root[data-theme="dark"]{
-    --stone:#141310;
-    --paper:#1C1A17;
-    --paper-raised:#242220;
-    --ink:#F1EEE6;
-    --ink-soft:#B8B3A7;
-    --ink-faint:#726E64;
-    --line: rgba(241,238,230,0.12);
-    --line-strong: rgba(241,238,230,0.22);
-    --cobalt:#5C79FF;
-    --cobalt-soft: rgba(92,121,255,0.18);
-    --cobalt-glass: rgba(92,121,255,0.20);
-    --ember:#FF7A42;
-    --ember-soft: rgba(255,122,66,0.18);
-    --ember-glass: rgba(255,122,66,0.22);
-    --glass-fill: rgba(36,34,30,0.48);
-    --glass-fill-strong: rgba(40,38,34,0.78);
-    --glass-border: rgba(255,255,255,0.10);
-    --glass-shadow: 0 24px 46px -20px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05) inset;
-    --scrim: rgba(0,0,0,0.55);
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --stone:#141310; --paper:#1C1A17; --paper-raised:#242220;
-      --ink:#F1EEE6; --ink-soft:#B8B3A7; --ink-faint:#726E64;
-      --line: rgba(241,238,230,0.12); --line-strong: rgba(241,238,230,0.22);
-      --cobalt:#5C79FF; --cobalt-soft: rgba(92,121,255,0.18); --cobalt-glass: rgba(92,121,255,0.20);
-      --ember:#FF7A42; --ember-soft: rgba(255,122,66,0.18); --ember-glass: rgba(255,122,66,0.22);
-      --glass-fill: rgba(36,34,30,0.48); --glass-fill-strong: rgba(40,38,34,0.78);
-      --glass-border: rgba(255,255,255,0.10);
-      --glass-shadow: 0 24px 46px -20px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05) inset;
-      --scrim: rgba(0,0,0,0.55);
-    }
   }
 
   *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body{ margin:0; padding:0; }
   body{
-    background:var(--stone);
+    background:#FFFFFF;
     color:var(--ink);
     font-family:var(--display);
     -webkit-font-smoothing:antialiased;
@@ -81,7 +47,7 @@
     width:100%; max-width:428px; height:920px; max-height:92vh;
     background:var(--paper);
     border-radius:34px; overflow:hidden; position:relative;
-    box-shadow:0 40px 80px -30px rgba(20,17,10,0.4), 0 0 0 1px var(--line-strong);
+    box-shadow:0 40px 80px -30px rgba(20,17,10,0.28), 0 0 0 1px var(--line-strong);
   }
   @media (max-width:520px){
     body{ padding:0; }
@@ -90,46 +56,37 @@
 
   /* ---------- Map stage ---------- */
   .map-viewport{
-    position:absolute; inset:0; overflow:hidden; touch-action:none; cursor:grab;
+    position:absolute; inset:0; overflow:hidden; touch-action:none; cursor:grab; background:#fff;
   }
   .map-viewport.dragging{ cursor:grabbing; }
   .map-layer{
     position:absolute; left:0; top:0; width:900px; height:1300px;
-    background:var(--paper);
+    background:#FFFFFF;
     will-change:transform;
   }
   .map-layer svg.streets{ position:absolute; inset:0; width:100%; height:100%; }
-  .map-blob{
-    position:absolute; border-radius:50%; filter:blur(50px); pointer-events:none;
-  }
   .watermark{
     position:absolute; left:44px; top:120px; font-weight:700; letter-spacing:-0.03em;
-    font-size:96px; line-height:0.86; color:var(--ink); opacity:0.05; white-space:pre; pointer-events:none;
+    font-size:96px; line-height:0.86; color:var(--cobalt); opacity:0.055; white-space:pre; pointer-events:none;
     text-transform:uppercase;
   }
 
   .pin{
-    position:absolute; width:30px; height:30px; margin:-15px 0 0 -15px;
-    border-radius:50%; border:none; padding:0; cursor:pointer;
-    background:var(--glass-fill-strong);
-    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-    border:1px solid var(--glass-border);
-    box-shadow:0 8px 18px -8px rgba(20,17,10,0.35);
-    display:flex; align-items:center; justify-content:center;
+    position:absolute; width:34px; height:42px; margin:-42px 0 0 -17px;
+    border:none; padding:0; cursor:pointer; background:none;
+    filter:drop-shadow(0 6px 10px rgba(23,24,27,0.16));
   }
-  .pin::after{
-    content:""; width:9px; height:9px; border-radius:50%; background:var(--pin-color, var(--cobalt));
-  }
-  .pin.attention{ animation:pinpulse 2.6s ease-in-out infinite; }
+  .pin svg{ width:100%; height:100%; overflow:visible; }
+  .pin.attention{ animation:pinpulse 2.2s ease-in-out infinite; }
   @keyframes pinpulse{
-    0%,100%{ box-shadow:0 8px 18px -8px rgba(20,17,10,0.35), 0 0 0 0 var(--ember-glass); }
-    50%{ box-shadow:0 8px 18px -8px rgba(20,17,10,0.35), 0 0 0 8px transparent; }
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-4px); }
   }
   @media (prefers-reduced-motion:reduce){ .pin.attention{ animation:none; } }
 
   .walker{
-    position:absolute; width:5px; height:5px; border-radius:50%; background:var(--ink);
-    opacity:0.28; pointer-events:none;
+    position:absolute; width:5px; height:5px; border-radius:50%; background:var(--cobalt);
+    opacity:0.32; pointer-events:none;
   }
 
   /* ---------- Chrome overlay (fixed above map) ---------- */
@@ -138,7 +95,7 @@
 
   .topfade{
     position:absolute; left:0; right:0; top:0; height:150px;
-    background:linear-gradient(180deg, var(--paper) 0%, color-mix(in srgb, var(--paper) 70%, transparent) 60%, transparent 100%);
+    background:linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 60%, transparent 100%);
     pointer-events:none !important;
   }
 
@@ -151,15 +108,14 @@
   .navlink{
     background:none; border:none; padding:2px 0; cursor:pointer; color:var(--ink-faint);
     font-size:10px; font-weight:600; letter-spacing:.13em; text-transform:uppercase;
-    border-bottom:1.5px solid transparent;
   }
-  .navlink.active{ color:var(--ink); border-color:var(--cobalt); }
+  .navlink.active{ color:var(--cobalt); font-weight:800; }
   .navlink:focus-visible{ outline:2px solid var(--cobalt); outline-offset:3px; }
   .counter{
     font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:0.02em;
     color:var(--cobalt); font-variant-numeric:tabular-nums;
   }
-  .counter.attn{ color:var(--ember); }
+  .counter.attn{ color:var(--b-repair); }
 
   .metarow{
     display:flex; align-items:baseline; justify-content:space-between; margin-top:14px;
@@ -167,16 +123,14 @@
   }
   .collection-label{ font-size:11px; letter-spacing:.03em; color:var(--ink-soft); }
   .collection-label b{ color:var(--ink); font-weight:700; }
-  .liveclock{ font-family:var(--mono); font-size:10px; color:var(--ink-faint); }
 
-  .locrow{ margin-top:8px; display:flex; align-items:center; gap:6px; }
-  .locpin-icon{ width:12px; height:12px; color:var(--ember); flex:none; }
+  .locrow{ margin-top:8px; display:flex; align-items:center; gap:6px; cursor:text; }
+  .locpin-icon{ width:12px; height:12px; color:var(--cobalt); flex:none; }
   #locInput{
     border:none; background:none; font-size:11.5px; font-weight:700; color:var(--ink);
-    padding:2px 0; border-bottom:1px dashed transparent; width:auto; max-width:220px;
+    padding:2px 0; width:auto; max-width:240px;
   }
-  #locInput:focus{ outline:none; border-color:var(--line-strong); }
-  .loc-edit-hint{ font-size:9.5px; color:var(--ink-faint); text-decoration:underline; background:none; border:none; cursor:pointer; padding:0; }
+  #locInput:focus{ outline:none; }
 
   /* ---------- Floating dock (jump to queue + geolocate) ---------- */
   .dock{
@@ -186,7 +140,7 @@
     width:44px; height:44px; border-radius:50%; border:1px solid var(--glass-border);
     background:var(--glass-fill-strong); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
     box-shadow:var(--glass-shadow); display:flex; align-items:center; justify-content:center; cursor:pointer;
-    color:var(--ink);
+    color:var(--cobalt);
   }
   .dock-btn:active{ transform:scale(0.94); }
   .dock-btn.primary{ background:var(--cobalt); color:#fff; border-color:transparent; }
@@ -194,16 +148,16 @@
   /* ---------- Bottom nav ---------- */
   .bottomnav{
     position:absolute; left:0; right:0; bottom:0; z-index:3;
-    background:linear-gradient(0deg, var(--paper) 30%, color-mix(in srgb, var(--paper) 60%, transparent) 80%, transparent 100%);
+    background:linear-gradient(0deg, #fff 30%, rgba(255,255,255,0.7) 80%, transparent 100%);
     padding:26px 18px calc(16px + env(safe-area-inset-bottom));
     display:flex; justify-content:center; gap:26px;
   }
   .tab{
     background:none; border:none; cursor:pointer; color:var(--ink-faint);
     font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
-    padding:4px 2px; border-bottom:1.5px solid transparent;
+    padding:4px 2px;
   }
-  .tab.active{ color:var(--ink); border-color:var(--cobalt); }
+  .tab.active{ color:var(--cobalt); font-weight:800; }
 
   /* ---------- Bottom sheet ---------- */
   .scrim{
@@ -211,52 +165,58 @@
   }
   .scrim.show{ opacity:1; pointer-events:auto; }
   .sheet{
-    position:absolute; left:0; right:0; bottom:0; z-index:11;
-    background:var(--glass-fill-strong); backdrop-filter:blur(24px) saturate(160%); -webkit-backdrop-filter:blur(24px) saturate(160%);
-    border-top:1px solid var(--glass-border); border-radius:26px 26px 0 0; box-shadow:var(--glass-shadow);
-    padding:10px 20px calc(22px + env(safe-area-inset-bottom));
-    transform:translateY(105%); transition:transform .32s cubic-bezier(.2,.8,.2,1);
+    position:absolute; left:14px; right:14px; bottom:calc(14px + env(safe-area-inset-bottom)); z-index:11;
+    background:#FFFFFF; border:2px solid var(--cobalt); border-radius:22px;
+    box-shadow:0 26px 50px -24px rgba(23,20,10,0.32);
+    padding:16px 18px 18px;
+    transform:translateY(16px) scale(0.98); opacity:0; transition:transform .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease;
+    pointer-events:none;
   }
-  .sheet.show{ transform:translateY(0); }
-  .sheet-handle{ width:36px; height:4px; border-radius:2px; background:var(--line-strong); margin:6px auto 14px; }
-  .sheet-top{ display:flex; gap:14px; align-items:flex-start; }
+  .sheet.show{ transform:translateY(0) scale(1); opacity:1; pointer-events:auto; }
+  .sheet-address{
+    font-family:var(--mono); font-size:10.5px; color:var(--cobalt); letter-spacing:.02em;
+    padding-right:26px; line-height:1.4;
+  }
+  .sheet-top{ display:flex; gap:14px; align-items:flex-start; margin-top:10px; }
   .sheet-icon{
-    width:56px; height:56px; border-radius:16px; flex:none; display:flex; align-items:center; justify-content:center;
-    background:var(--icon-bg, var(--cobalt-glass));
+    width:52px; height:52px; border-radius:14px; flex:none; display:flex; align-items:center; justify-content:center;
+    background:var(--cobalt-soft); border:1.5px solid var(--icon-color, var(--cobalt));
   }
-  .sheet-icon svg{ width:30px; height:30px; }
+  .sheet-icon svg{ width:28px; height:28px; }
   .sheet-id{ font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); }
-  .sheet-name{ font-size:18px; font-weight:700; letter-spacing:-.01em; margin-top:1px; }
+  .sheet-name{ font-size:17px; font-weight:700; letter-spacing:-.01em; margin-top:1px; }
   .sheet-status{
-    display:inline-flex; align-items:center; gap:5px; margin-top:6px; font-size:10.5px; font-weight:700;
-    letter-spacing:.08em; text-transform:uppercase; color:var(--status-color, var(--cobalt));
+    display:inline-flex; align-items:center; gap:6px; margin-top:7px; font-size:11px; font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--status-color, var(--cobalt));
   }
-  .sheet-status .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .sheet-status svg{ width:11px; height:11px; flex:none; }
   .sheet-issue{ font-size:13px; color:var(--ink-soft); line-height:1.5; margin-top:12px; }
   .sheet-meta{ display:flex; gap:18px; margin-top:14px; padding-top:14px; border-top:1px solid var(--line); }
   .sheet-meta div{ font-size:9.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em; }
   .sheet-meta b{ display:block; font-family:var(--mono); font-size:13px; color:var(--ink); font-weight:700; margin-top:3px; letter-spacing:0; text-transform:none; }
   .sheet-actions{ display:flex; gap:8px; margin-top:16px; }
   .sheet-btn{
-    flex:1; border-radius:13px; border:1px solid var(--line-strong); background:var(--paper-raised);
-    color:var(--ink); font-size:12.5px; font-weight:700; padding:12px 6px; cursor:pointer; text-align:center;
+    flex:1; display:flex; align-items:center; justify-content:center; gap:7px;
+    border-radius:13px; border:1.5px solid var(--cobalt); background:#fff;
+    color:var(--cobalt); font-size:12.5px; font-weight:700; padding:11px 6px; cursor:pointer; text-align:center;
   }
-  .sheet-btn.primary{ background:var(--cobalt); color:#fff; border-color:transparent; }
-  .sheet-btn.ember{ background:var(--ember); color:#fff; border-color:transparent; }
+  .sheet-btn svg{ width:12px; height:12px; flex:none; }
+  .sheet-btn.primary{ background:var(--cobalt); color:#fff; }
+  .sheet-btn.repair{ background:var(--b-repair); color:#fff; border-color:var(--b-repair); }
   .sheet-btn:active{ transform:scale(.97); }
   .sheet-btn.sent{ opacity:.55; }
   .sheet-close{
-    position:absolute; right:14px; top:12px; width:28px; height:28px; border-radius:50%; border:none;
-    background:var(--paper-raised); color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    position:absolute; right:14px; top:14px; width:26px; height:26px; border-radius:50%; border:1px solid var(--line-strong);
+    background:#fff; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:center;
   }
 
   .toast{
     position:fixed; left:50%; bottom:100px; transform:translateX(-50%) translateY(8px);
-    background:var(--ink); color:var(--paper); font-size:12.5px; font-weight:600;
+    background:#FFFFFF; color:var(--ink); font-size:12.5px; font-weight:600;
     padding:10px 18px; border-radius:12px; opacity:0; pointer-events:none; transition:opacity .18s, transform .18s;
-    z-index:80; white-space:nowrap;
+    z-index:80; white-space:nowrap; border:1px solid var(--line-strong);
+    box-shadow:0 14px 30px -14px rgba(23,20,10,0.28);
   }
-  :root[data-theme="dark"] .toast{ background:var(--paper-raised); color:var(--ink); border:1px solid var(--line-strong); }
   .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
   @media (prefers-reduced-motion:reduce){ .toast, .sheet, .pin{ transition:none; animation:none; } }
 </style>
@@ -266,17 +226,30 @@
 <div class="device">
   <div class="map-viewport" id="mapViewport">
     <div class="map-layer" id="mapLayer">
-      <div class="map-blob" style="width:420px;height:420px;left:520px;top:120px;background:var(--cobalt-glass);"></div>
-      <div class="map-blob" style="width:380px;height:380px;left:60px;top:640px;background:var(--ember-glass);"></div>
       <svg class="streets" viewBox="0 0 900 1300" fill="none">
-        <path d="M0 380 H900" stroke="var(--line)" stroke-width="2"/>
-        <path d="M0 720 H900" stroke="var(--line)" stroke-width="2"/>
-        <path d="M0 1020 H900" stroke="var(--line)" stroke-width="2"/>
-        <path d="M260 0 V1300" stroke="var(--line)" stroke-width="2"/>
-        <path d="M560 0 V1300" stroke="var(--line)" stroke-width="2"/>
-        <path d="M0 60 L900 980" stroke="var(--line)" stroke-width="2"/>
-        <rect x="150" y="640" width="220" height="180" rx="18" fill="var(--stone)" opacity="0.6"/>
-        <path d="M40 1100 Q 400 950 860 1180" stroke="var(--cobalt-soft)" stroke-width="14" stroke-linecap="round" fill="none"/>
+        <defs>
+          <filter id="sketchyA" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="4" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+          <filter id="sketchyB" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015 0.025" numOctaves="2" seed="11" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+          <filter id="sketchyPin" x="-40%" y="-40%" width="180%" height="180%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.06 0.09" numOctaves="2" seed="6" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
+        <g stroke="var(--cobalt)" stroke-linecap="round" fill="none">
+          <path d="M6 380 H894" stroke-width="2.4" opacity="0.55" filter="url(#sketchyA)"/>
+          <path d="M6 722 H894" stroke-width="2.4" opacity="0.55" filter="url(#sketchyB)"/>
+          <path d="M6 1018 H894" stroke-width="2.4" opacity="0.55" filter="url(#sketchyA)"/>
+          <path d="M260 6 V1294" stroke-width="2.4" opacity="0.55" filter="url(#sketchyB)"/>
+          <path d="M560 6 V1294" stroke-width="2.4" opacity="0.55" filter="url(#sketchyA)"/>
+          <path d="M10 60 L890 980" stroke-width="2.4" opacity="0.5" filter="url(#sketchyB)"/>
+          <path d="M40 1100 Q 400 950 860 1180" stroke-width="10" opacity="0.28" filter="url(#sketchyA)"/>
+        </g>
       </svg>
       <div class="watermark" id="watermark">DOWNTOWN{'\n'}LOOP</div>
 
@@ -309,10 +282,9 @@
         <div class="collection-label">A/12 — <b>Fleet Map</b> · 8 machines</div>
         <div class="counter attn" id="counterBadge">(2/8)</div>
       </div>
-      <div class="locrow">
+      <div class="locrow" onclick="document.getElementById('locInput').focus()">
         <svg class="locpin-icon" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.58 7-13A7 7 0 105 9c0 5.42 7 13 7 13z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9" r="2.4" fill="currentColor"/></svg>
         <input id="locInput" value="Austin — Downtown Loop" />
-        <button class="loc-edit-hint" onclick="document.getElementById('locInput').focus()">edit</button>
       </div>
     </header>
   </div>
@@ -338,7 +310,7 @@
     <button class="sheet-close" onclick="closeSheet()" aria-label="Close">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
     </button>
-    <div class="sheet-handle"></div>
+    <div class="sheet-address" id="sheetAddress">—</div>
     <div class="sheet-top">
       <div class="sheet-icon" id="sheetIcon">
         <svg viewBox="0 0 24 24" fill="none" id="sheetIconSvg"><rect x="5" y="2.5" width="14" height="19" rx="2" stroke="currentColor" stroke-width="1.6"/><rect x="7.3" y="5" width="4" height="4" rx="0.6" stroke="currentColor" stroke-width="1.3"/><rect x="12.7" y="5" width="4" height="4" rx="0.6" stroke="currentColor" stroke-width="1.3"/><rect x="7.3" y="10" width="4" height="4" rx="0.6" stroke="currentColor" stroke-width="1.3"/><rect x="12.7" y="10" width="4" height="4" rx="0.6" stroke="currentColor" stroke-width="1.3"/><circle cx="15.5" cy="17.3" r="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
@@ -346,7 +318,7 @@
       <div>
         <div class="sheet-id" id="sheetId">#00</div>
         <div class="sheet-name" id="sheetName">Machine</div>
-        <div class="sheet-status" id="sheetStatus"><span class="dot"></span><span id="sheetStatusText">Stocked</span></div>
+        <div class="sheet-status" id="sheetStatus"><span id="sheetStatusShape"></span><span id="sheetStatusText">Stocked</span></div>
       </div>
     </div>
     <div class="sheet-issue" id="sheetIssue"></div>
@@ -363,21 +335,37 @@
 <script>
 (function(){
   const machines = [
-    { id:'#01', name:'Downtown Transit Hub', x:420, y:560, status:'ok', category:'Snacks · Coffee', issue:'Fully stocked, running smoothly.', visit:'Today, 8:10a' },
-    { id:'#07', name:'Tech Corridor — Bldg C', x:620, y:410, status:'critical', category:'Snacks · Cold Drinks', issue:'Two columns empty since this morning. Card reader also flagged flaky — worth a look while restocking.', visit:'Yesterday' },
-    { id:'#05', name:'University Row', x:290, y:290, status:'warning', category:'Candy', issue:'Candy at 22% and selling fast — a campus event nearby is driving demand.', visit:'2 days ago' },
-    { id:'#04', name:'Riverside Park', x:190, y:700, status:'ok', category:'Healthy · Snacks', issue:'Stocked, slightly overweighted on Healthy this week.', visit:'Yesterday' },
-    { id:'#09', name:'City Hospital Lobby', x:520, y:790, status:'repair', category:'Snacks · Coffee', issue:'Coin mechanism jammed. Card payments still work; coin sales are blocked until serviced.', visit:'3 days ago' },
-    { id:'#02', name:'Central Library', x:380, y:460, status:'ok', category:'Snacks · Coffee', issue:'Fully stocked.', visit:'Today, 7:40a' },
-    { id:'#12', name:'Airport Terminal B', x:710, y:990, status:'critical', category:'Snacks', issue:'Snacks empty for ~40 minutes on a high-traffic route — highest sales-loss risk right now.', visit:'Yesterday' },
-    { id:'#08', name:'Westside Gym', x:150, y:960, status:'ok', category:'Healthy · Cold Drinks', issue:'Fully stocked.', visit:'2 days ago' },
+    { id:'#01', name:'Downtown Transit Hub', address:'310 Congress Ave, Austin, TX 78701', x:420, y:560, status:'ok', category:'Snacks · Coffee', issue:'Fully stocked, running smoothly.', visit:'Today, 8:10a' },
+    { id:'#07', name:'Tech Corridor — Bldg C', address:'1200 E 6th St, Bldg C, Austin, TX 78702', x:620, y:410, status:'critical', category:'Snacks · Cold Drinks', issue:'Two columns empty since this morning. Card reader also flagged flaky — worth a look while restocking.', visit:'Yesterday' },
+    { id:'#05', name:'University Row', address:'2400 Guadalupe St, Austin, TX 78705', x:290, y:290, status:'warning', category:'Candy', issue:'Candy at 22% and selling fast — a campus event nearby is driving demand.', visit:'2 days ago' },
+    { id:'#04', name:'Riverside Park', address:'800 Riverside Dr, Austin, TX 78704', x:190, y:700, status:'ok', category:'Healthy · Snacks', issue:'Stocked, slightly overweighted on Healthy this week.', visit:'Yesterday' },
+    { id:'#09', name:'City Hospital Lobby', address:'1201 W 38th St, Austin, TX 78731', x:520, y:790, status:'repair', category:'Snacks · Coffee', issue:'Coin mechanism jammed. Card payments still work; coin sales are blocked until serviced.', visit:'3 days ago' },
+    { id:'#02', name:'Central Library', address:'710 W César Chávez St, Austin, TX 78701', x:380, y:460, status:'ok', category:'Snacks · Coffee', issue:'Fully stocked.', visit:'Today, 7:40a' },
+    { id:'#12', name:'Airport Terminal B', address:'3600 Presidential Blvd, Terminal B, Austin, TX 78719', x:710, y:990, status:'critical', category:'Snacks', issue:'Snacks empty for ~40 minutes on a high-traffic route — highest sales-loss risk right now.', visit:'Yesterday' },
+    { id:'#08', name:'Westside Gym', address:'4477 S Lamar Blvd, Austin, TX 78745', x:150, y:960, status:'ok', category:'Healthy · Cold Drinks', issue:'Fully stocked.', visit:'2 days ago' },
   ];
+  // Status maps to a shape (what to do) and a shade of blue (how urgent) — light to dark = good to repair.
   const statusMeta = {
-    ok:       { color:'var(--cobalt)', label:'Stocked', iconBg:'var(--cobalt-glass)' },
-    warning:  { color:'var(--ember)',  label:'Low stock', iconBg:'var(--ember-glass)' },
-    critical: { color:'var(--ember)',  label:'Empty', iconBg:'var(--ember-glass)' },
-    repair:   { color:'var(--ember)',  label:'Needs repair', iconBg:'var(--ember-glass)' },
+    ok:       { color:'#7C93F5', varName:'--b-good',   label:'Good',    shape:'circle'   },
+    warning:  { color:'#4A66E6', varName:'--b-low',    label:'Restock', shape:'square'   },
+    critical: { color:'#1D3AE8', varName:'--b-empty',  label:'Restock', shape:'square'   },
+    repair:   { color:'#101B5E', varName:'--b-repair', label:'Repair',  shape:'triangle' },
   };
+
+  function shapeSvg(shape, color, size){
+    size = size || 14;
+    if(shape==='circle') return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5" fill="'+color+'"/></svg>';
+    if(shape==='square')  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 14 14"><rect x="2" y="2" width="10" height="10" rx="2" fill="'+color+'"/></svg>';
+    return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 14 14"><path d="M7 1.5 L13 12.5 H1 Z" fill="'+color+'" stroke-linejoin="round"/></svg>';
+  }
+
+  function pinSvg(color){
+    return '<svg viewBox="0 0 34 42" fill="none">'+
+      '<path d="M17 1.5C9.2 1.5 3 7.6 3 15c0 9.6 14 25 14 25s14-15.4 14-25c0-7.4-6.2-13.5-14-13.5Z" '+
+        'fill="#fff" stroke="'+color+'" stroke-width="2.4" stroke-linejoin="round" filter="url(#sketchyPin)"/>'+
+      '<circle cx="17" cy="15" r="5.2" fill="'+color+'"/>'+
+    '</svg>';
+  }
 
   const pinLayer = document.getElementById('pinLayer');
   machines.forEach(m=>{
@@ -385,7 +373,7 @@
     const btn = document.createElement('button');
     btn.className = 'pin' + (m.status!=='ok' ? ' attention' : '');
     btn.style.left = m.x+'px'; btn.style.top = m.y+'px';
-    btn.style.setProperty('--pin-color', meta.color);
+    btn.innerHTML = pinSvg(meta.color);
     btn.setAttribute('aria-label', m.name+' — '+meta.label);
     btn.addEventListener('click', ()=> openSheet(m));
     pinLayer.appendChild(btn);
@@ -401,33 +389,41 @@
   const sheet = document.getElementById('sheet');
   window.openSheet = function(m){
     const meta = statusMeta[m.status];
+    document.getElementById('sheetAddress').textContent = m.address;
     document.getElementById('sheetId').textContent = m.id;
     document.getElementById('sheetName').textContent = m.name;
     document.getElementById('sheetStatusText').textContent = meta.label;
+    document.getElementById('sheetStatusShape').innerHTML = shapeSvg(meta.shape, meta.color, 11);
     document.getElementById('sheetStatus').style.setProperty('--status-color', meta.color);
     document.getElementById('sheetIssue').textContent = m.issue;
     document.getElementById('sheetVisit').textContent = m.visit;
     document.getElementById('sheetCategory').textContent = m.category;
-    document.getElementById('sheetIcon').style.setProperty('--icon-bg', meta.iconBg);
+    document.getElementById('sheetIcon').style.setProperty('--icon-color', meta.color);
     document.getElementById('sheetIconSvg').style.color = meta.color;
 
     const actions = document.getElementById('sheetActions');
     actions.innerHTML = '';
     if(m.status==='repair'){
-      actions.appendChild(makeBtn('Dispatch tech','ember','Technician notified for '+m.id));
+      actions.appendChild(makeBtn('Repair', shapeSvg('triangle','#fff',12), 'repair', 'Technician notified for '+m.id));
     } else if(m.status!=='ok'){
-      actions.appendChild(makeBtn('Restock now','primary','Restock dispatched for '+m.id));
+      actions.appendChild(makeBtn('Restock', shapeSvg('square','#fff',12), 'primary', 'Restock dispatched for '+m.id));
+    } else {
+      actions.appendChild(makeBtn('Good', shapeSvg('circle','var(--b-good)',12), '', ''));
     }
-    actions.appendChild(makeBtn('Notify delivery','', 'Nearest courier notified about '+m.id));
+    actions.appendChild(makeBtn('Notify delivery', '', '', 'Nearest courier notified about '+m.id));
 
     scrim.classList.add('show');
     sheet.classList.add('show');
   };
-  function makeBtn(label, cls, msg){
+  function makeBtn(label, iconHtml, cls, msg){
     const b = document.createElement('button');
     b.className = 'sheet-btn' + (cls?' '+cls:'');
-    b.textContent = label;
-    b.addEventListener('click', ()=>{ b.textContent='Sent ✓'; b.classList.add('sent'); b.disabled=true; showToast(msg); });
+    b.innerHTML = (iconHtml||'') + '<span>'+label+'</span>';
+    if(msg){
+      b.addEventListener('click', ()=>{ b.querySelector('span').textContent='Sent ✓'; b.classList.add('sent'); b.disabled=true; showToast(msg); });
+    } else {
+      b.disabled = true;
+    }
     return b;
   }
   window.closeSheet = function(){ scrim.classList.remove('show'); sheet.classList.remove('show'); };
@@ -449,6 +445,7 @@
   }
   locInput.addEventListener('change', syncWatermark);
   locInput.addEventListener('blur', syncWatermark);
+  locInput.addEventListener('click', (e)=> e.stopPropagation());
 
   window.useMyLocation = function(){
     if(!navigator.geolocation){ showToast('Location services unavailable on this device'); return; }

@@ -61,15 +61,10 @@
   .map-viewport.dragging{ cursor:grabbing; }
   .map-layer{
     position:absolute; left:0; top:0; width:900px; height:1300px;
-    background:#FFFFFF;
+    background:#FFFFFF; transform-origin:0 0;
     will-change:transform;
   }
   .map-layer svg.streets{ position:absolute; inset:0; width:100%; height:100%; }
-  .watermark{
-    position:absolute; left:44px; top:120px; font-weight:700; letter-spacing:-0.03em;
-    font-size:96px; line-height:0.86; color:var(--cobalt); opacity:0.055; white-space:pre; pointer-events:none;
-    text-transform:uppercase;
-  }
 
   .pin{
     position:absolute; width:34px; height:42px; margin:-42px 0 0 -17px;
@@ -100,34 +95,10 @@
   }
 
   .topbar{ position:relative; padding:16px 18px 0; z-index:2; }
-  .topbar-row{ display:flex; align-items:center; justify-content:space-between; }
-  .mark{ display:flex; align-items:center; gap:7px; }
-  .mark-glyph{ width:22px; height:22px; }
-  .mark-word{ font-size:13px; font-weight:700; letter-spacing:-0.01em; }
-  .navrow{ display:flex; gap:16px; }
-  .navlink{
-    background:none; border:none; padding:2px 0; cursor:pointer; color:var(--ink-faint);
-    font-size:10px; font-weight:600; letter-spacing:.13em; text-transform:uppercase;
-  }
-  .navlink.active{ color:var(--cobalt); font-weight:800; }
-  .navlink:focus-visible{ outline:2px solid var(--cobalt); outline-offset:3px; }
-  .counter{
-    font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:0.02em;
-    color:var(--cobalt); font-variant-numeric:tabular-nums;
-  }
-  .counter.attn{ color:var(--b-repair); }
-
-  .metarow{
-    display:flex; align-items:baseline; justify-content:space-between; margin-top:14px;
-    padding:0 2px;
-  }
-  .collection-label{ font-size:11px; letter-spacing:.03em; color:var(--ink-soft); }
-  .collection-label b{ color:var(--ink); font-weight:700; }
-
-  .locrow{ margin-top:8px; display:flex; align-items:center; gap:6px; cursor:text; }
+  .locrow{ display:flex; align-items:center; gap:6px; cursor:text; }
   .locpin-icon{ width:12px; height:12px; color:var(--cobalt); flex:none; }
   #locInput{
-    border:none; background:none; font-size:11.5px; font-weight:700; color:var(--ink);
+    border:none; background:none; font-size:12px; font-weight:700; color:var(--ink);
     padding:2px 0; width:auto; max-width:240px;
   }
   #locInput:focus{ outline:none; }
@@ -173,23 +144,22 @@
     pointer-events:none;
   }
   .sheet.show{ transform:translateY(0) scale(1); opacity:1; pointer-events:auto; }
-  .sheet-address{
-    font-family:var(--mono); font-size:10.5px; color:var(--cobalt); letter-spacing:.02em;
-    padding-right:26px; line-height:1.4;
-  }
-  .sheet-top{ display:flex; gap:14px; align-items:flex-start; margin-top:10px; }
+  .sheet-top{ display:flex; gap:12px; align-items:flex-start; margin-top:24px; }
   .sheet-icon{
-    width:52px; height:52px; border-radius:14px; flex:none; display:flex; align-items:center; justify-content:center;
+    width:48px; height:48px; border-radius:13px; flex:none; display:flex; align-items:center; justify-content:center;
     background:var(--cobalt-soft); border:1.5px solid var(--icon-color, var(--cobalt));
   }
-  .sheet-icon svg{ width:28px; height:28px; }
-  .sheet-id{ font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); }
-  .sheet-name{ font-size:17px; font-weight:700; letter-spacing:-.01em; margin-top:1px; }
-  .sheet-status{
-    display:inline-flex; align-items:center; gap:6px; margin-top:7px; font-size:11px; font-weight:700;
-    letter-spacing:.06em; text-transform:uppercase; color:var(--status-color, var(--cobalt));
+  .sheet-icon svg{ width:25px; height:25px; }
+  .sheet-heading{ flex:1; min-width:0; }
+  .sheet-id{ font-family:var(--mono); font-size:10px; color:var(--ink-faint); }
+  .sheet-name{ font-size:16.5px; font-weight:700; letter-spacing:-.01em; margin-top:1px; }
+  .sheet-address{ font-size:11.5px; color:var(--ink-soft); margin-top:2px; line-height:1.35; }
+  .sheet-status-pill{
+    flex:none; display:inline-flex; align-items:center; gap:5px; margin-top:1px;
+    padding:5px 10px; border-radius:20px; border:1.5px solid var(--status-color, var(--cobalt));
+    font-size:10px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--status-color, var(--cobalt));
   }
-  .sheet-status svg{ width:11px; height:11px; flex:none; }
+  .sheet-status-pill svg{ width:10px; height:10px; flex:none; }
   .sheet-issue{ font-size:13px; color:var(--ink-soft); line-height:1.5; margin-top:12px; }
   .sheet-meta{ display:flex; gap:18px; margin-top:14px; padding-top:14px; border-top:1px solid var(--line); }
   .sheet-meta div{ font-size:9.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em; }
@@ -251,8 +221,6 @@
           <path d="M40 1100 Q 400 950 860 1180" stroke-width="10" opacity="0.28" filter="url(#sketchyA)"/>
         </g>
       </svg>
-      <div class="watermark" id="watermark">DOWNTOWN{'\n'}LOOP</div>
-
       <div class="walker" id="w1"></div>
       <div class="walker" id="w2"></div>
       <div class="walker" id="w3"></div>
@@ -266,22 +234,6 @@
   <div class="chrome">
     <div class="topfade"></div>
     <header class="topbar">
-      <div class="topbar-row">
-        <div class="mark">
-          <svg class="mark-glyph" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 18H15M6 18V9" stroke="var(--cobalt)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span class="mark-word">VENDOPS</span>
-        </div>
-        <nav class="navrow">
-          <button class="navlink active">Map</button>
-          <button class="navlink" onclick="showToast('Alerts — coming to this screen next')">Alerts</button>
-          <button class="navlink" onclick="showToast('Analytics — parked for now')">Analytics</button>
-          <button class="navlink" onclick="showToast('Profile — routes, team, settings')">Profile</button>
-        </nav>
-      </div>
-      <div class="metarow">
-        <div class="collection-label">A/12 — <b>Fleet Map</b> · 8 machines</div>
-        <div class="counter attn" id="counterBadge">(2/8)</div>
-      </div>
       <div class="locrow" onclick="document.getElementById('locInput').focus()">
         <svg class="locpin-icon" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.58 7-13A7 7 0 105 9c0 5.42 7 13 7 13z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9" r="2.4" fill="currentColor"/></svg>
         <input id="locInput" value="Austin — Downtown Loop" />
@@ -310,16 +262,16 @@
     <button class="sheet-close" onclick="closeSheet()" aria-label="Close">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
     </button>
-    <div class="sheet-address" id="sheetAddress">—</div>
     <div class="sheet-top">
       <div class="sheet-icon" id="sheetIcon">
         <svg viewBox="0 0 24 24" fill="none" id="sheetIconSvg"><rect x="5" y="2.5" width="14" height="19" rx="2" stroke="currentColor" stroke-width="1.6"/><rect x="7.3" y="5" width="4" height="4" rx="0.6" stroke="currentColor" stroke-width="1.3"/><rect x="12.7" y="5" width="4" height="4" rx="0.6" stroke="currentColor" stroke-width="1.3"/><rect x="7.3" y="10" width="4" height="4" rx="0.6" stroke="currentColor" stroke-width="1.3"/><rect x="12.7" y="10" width="4" height="4" rx="0.6" stroke="currentColor" stroke-width="1.3"/><circle cx="15.5" cy="17.3" r="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
       </div>
-      <div>
+      <div class="sheet-heading">
         <div class="sheet-id" id="sheetId">#00</div>
         <div class="sheet-name" id="sheetName">Machine</div>
-        <div class="sheet-status" id="sheetStatus"><span id="sheetStatusShape"></span><span id="sheetStatusText">Stocked</span></div>
+        <div class="sheet-address" id="sheetAddress">—</div>
       </div>
+      <div class="sheet-status-pill" id="sheetStatus"><span id="sheetStatusShape"></span><span id="sheetStatusText">Good</span></div>
     </div>
     <div class="sheet-issue" id="sheetIssue"></div>
     <div class="sheet-meta">
@@ -335,14 +287,14 @@
 <script>
 (function(){
   const machines = [
-    { id:'#01', name:'Downtown Transit Hub', address:'310 Congress Ave, Austin, TX 78701', x:420, y:560, status:'ok', category:'Snacks · Coffee', issue:'Fully stocked, running smoothly.', visit:'Today, 8:10a' },
-    { id:'#07', name:'Tech Corridor — Bldg C', address:'1200 E 6th St, Bldg C, Austin, TX 78702', x:620, y:410, status:'critical', category:'Snacks · Cold Drinks', issue:'Two columns empty since this morning. Card reader also flagged flaky — worth a look while restocking.', visit:'Yesterday' },
-    { id:'#05', name:'University Row', address:'2400 Guadalupe St, Austin, TX 78705', x:290, y:290, status:'warning', category:'Candy', issue:'Candy at 22% and selling fast — a campus event nearby is driving demand.', visit:'2 days ago' },
-    { id:'#04', name:'Riverside Park', address:'800 Riverside Dr, Austin, TX 78704', x:190, y:700, status:'ok', category:'Healthy · Snacks', issue:'Stocked, slightly overweighted on Healthy this week.', visit:'Yesterday' },
-    { id:'#09', name:'City Hospital Lobby', address:'1201 W 38th St, Austin, TX 78731', x:520, y:790, status:'repair', category:'Snacks · Coffee', issue:'Coin mechanism jammed. Card payments still work; coin sales are blocked until serviced.', visit:'3 days ago' },
-    { id:'#02', name:'Central Library', address:'710 W César Chávez St, Austin, TX 78701', x:380, y:460, status:'ok', category:'Snacks · Coffee', issue:'Fully stocked.', visit:'Today, 7:40a' },
-    { id:'#12', name:'Airport Terminal B', address:'3600 Presidential Blvd, Terminal B, Austin, TX 78719', x:710, y:990, status:'critical', category:'Snacks', issue:'Snacks empty for ~40 minutes on a high-traffic route — highest sales-loss risk right now.', visit:'Yesterday' },
-    { id:'#08', name:'Westside Gym', address:'4477 S Lamar Blvd, Austin, TX 78745', x:150, y:960, status:'ok', category:'Healthy · Cold Drinks', issue:'Fully stocked.', visit:'2 days ago' },
+    { id:'#01', name:'Downtown Transit Hub', address:'Downtown Austin Transit Center', x:420, y:560, status:'ok', category:'Snacks · Coffee', issue:'Fully stocked, running smoothly.', visit:'Today, 8:10a' },
+    { id:'#07', name:'Tech Corridor — Bldg C', address:'East Austin Tech Corridor, Bldg C', x:620, y:410, status:'critical', category:'Snacks · Cold Drinks', issue:'Two columns empty since this morning. Card reader also flagged flaky — worth a look while restocking.', visit:'Yesterday' },
+    { id:'#05', name:'University Row', address:'University of Texas at Austin', x:290, y:290, status:'warning', category:'Candy', issue:'Candy at 22% and selling fast — a campus event nearby is driving demand.', visit:'2 days ago' },
+    { id:'#04', name:'Riverside Park', address:'Lady Bird Lake Riverside Park', x:190, y:700, status:'ok', category:'Healthy · Snacks', issue:'Stocked, slightly overweighted on Healthy this week.', visit:'Yesterday' },
+    { id:'#09', name:'City Hospital Lobby', address:'Dell Seton Medical Center', x:520, y:790, status:'repair', category:'Snacks · Coffee', issue:'Coin mechanism jammed. Card payments still work; coin sales are blocked until serviced.', visit:'3 days ago' },
+    { id:'#02', name:'Central Library', address:'Austin Central Library', x:380, y:460, status:'ok', category:'Snacks · Coffee', issue:'Fully stocked.', visit:'Today, 7:40a' },
+    { id:'#12', name:'Airport Terminal B', address:'Austin-Bergstrom Intl Airport', x:710, y:990, status:'critical', category:'Snacks', issue:'Snacks empty for ~40 minutes on a high-traffic route — highest sales-loss risk right now.', visit:'Yesterday' },
+    { id:'#08', name:'Westside Gym', address:'Westside Fitness Center', x:150, y:960, status:'ok', category:'Healthy · Cold Drinks', issue:'Fully stocked.', visit:'2 days ago' },
   ];
   // Status maps to a shape (what to do) and a shade of blue (how urgent) — light to dark = good to repair.
   const statusMeta = {
@@ -375,14 +327,9 @@
     btn.style.left = m.x+'px'; btn.style.top = m.y+'px';
     btn.innerHTML = pinSvg(meta.color);
     btn.setAttribute('aria-label', m.name+' — '+meta.label);
-    btn.addEventListener('click', ()=> openSheet(m));
+    btn.addEventListener('click', ()=>{ zoomTo(ZOOM_IN, m.x, m.y); openSheet(m); });
     pinLayer.appendChild(btn);
   });
-
-  const attnCount = machines.filter(m=>m.status!=='ok').length;
-  const badge = document.getElementById('counterBadge');
-  badge.textContent = '('+attnCount+'/'+machines.length+')';
-  if(attnCount===0){ badge.classList.remove('attn'); }
 
   /* ---------------- sheet ---------------- */
   const scrim = document.getElementById('scrim');
@@ -426,7 +373,10 @@
     }
     return b;
   }
-  window.closeSheet = function(){ scrim.classList.remove('show'); sheet.classList.remove('show'); };
+  window.closeSheet = function(){
+    scrim.classList.remove('show'); sheet.classList.remove('show');
+    zoomOut();
+  };
 
   /* ---------------- toast ---------------- */
   let toastTimer;
@@ -437,14 +387,6 @@
 
   /* ---------------- location input ---------------- */
   const locInput = document.getElementById('locInput');
-  const watermark = document.getElementById('watermark');
-  function syncWatermark(){
-    const parts = locInput.value.split('—');
-    const last = (parts[parts.length-1] || locInput.value).trim();
-    watermark.textContent = last.toUpperCase();
-  }
-  locInput.addEventListener('change', syncWatermark);
-  locInput.addEventListener('blur', syncWatermark);
   locInput.addEventListener('click', (e)=> e.stopPropagation());
 
   window.useMyLocation = function(){
@@ -459,30 +401,47 @@
 
   window.focusAttention = function(){
     const first = machines.find(m=>m.status!=='ok');
-    if(first) panTo(first.x, first.y);
+    if(first){ zoomTo(ZOOM_IN, first.x, first.y); }
   };
 
-  /* ---------------- draggable map ---------------- */
+  /* ---------------- draggable + zoomable map ---------------- */
+  const LAYER_W = 900, LAYER_H = 1300;
+  const ZOOM_IN = 0.85;
   const viewport = document.getElementById('mapViewport');
   const layer = document.getElementById('mapLayer');
-  let tx = -260, ty = -260, dragging=false, startX=0, startY=0, baseX=0, baseY=0;
+  let scale = 0.3, scaleFit = 0.3;
+  let tx = 0, ty = 0, dragging=false, startX=0, startY=0, baseX=0, baseY=0;
 
+  function computeFit(){
+    const vw = viewport.clientWidth, vh = viewport.clientHeight;
+    scaleFit = Math.min(vw/LAYER_W, vh/LAYER_H) * 0.94;
+  }
   function clamp(){
     const vw = viewport.clientWidth, vh = viewport.clientHeight;
-    const minX = Math.min(0, vw - 900), minY = Math.min(0, vh - 1300);
-    tx = Math.max(minX, Math.min(0, tx));
-    ty = Math.max(minY, Math.min(0, ty));
+    const cw = LAYER_W*scale, ch = LAYER_H*scale;
+    tx = (cw<=vw) ? (vw-cw)/2 : Math.max(vw-cw, Math.min(0,tx));
+    ty = (ch<=vh) ? (vh-ch)/2 : Math.max(vh-ch, Math.min(0,ty));
   }
-  function apply(){ layer.style.transform = 'translate3d('+tx+'px,'+ty+'px,0)'; }
-  function panTo(x,y){
-    tx = -(x - viewport.clientWidth/2);
-    ty = -(y - viewport.clientHeight/2);
-    clamp();
-    layer.style.transition='transform .5s cubic-bezier(.2,.8,.2,1)';
+  function apply(){ layer.style.transform = 'translate3d('+tx+'px,'+ty+'px,0) scale('+scale+')'; }
+  function animateTo(duration){
+    layer.style.transition = 'transform '+duration+'s cubic-bezier(.2,.8,.2,1)';
     apply();
-    setTimeout(()=>{ layer.style.transition=''; }, 520);
+    setTimeout(()=>{ layer.style.transition=''; }, duration*1000+30);
   }
-  clamp(); apply();
+  window.zoomTo = function(targetScale, x, y){
+    scale = targetScale;
+    tx = viewport.clientWidth/2 - x*scale;
+    ty = viewport.clientHeight/2 - y*scale;
+    clamp();
+    animateTo(0.5);
+  };
+  window.zoomOut = function(){
+    scale = scaleFit;
+    clamp();
+    animateTo(0.5);
+  };
+
+  computeFit(); scale = scaleFit; clamp(); apply();
 
   viewport.addEventListener('pointerdown', (e)=>{
     if(e.target.closest('.pin')) return; // let the pin's own click fire instead of starting a drag
@@ -497,7 +456,7 @@
   ['pointerup','pointercancel','pointerleave'].forEach(ev=>{
     viewport.addEventListener(ev, ()=>{ dragging=false; viewport.classList.remove('dragging'); });
   });
-  window.addEventListener('resize', ()=>{ clamp(); apply(); });
+  window.addEventListener('resize', ()=>{ computeFit(); if(scale===scaleFit || scale<scaleFit){ scale=scaleFit; } clamp(); apply(); });
 
   /* ---------------- walking dots, for fun ---------------- */
   const walkPaths = [
@@ -524,8 +483,6 @@
       el.style.display='none';
     }
   });
-
-  syncWatermark();
 })();
 </script>
 </body>

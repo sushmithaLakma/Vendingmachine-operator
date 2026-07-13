@@ -198,11 +198,11 @@
     <div class="map-layer" id="mapLayer">
       <svg class="streets" viewBox="0 0 900 1300" fill="none">
         <defs>
-          <filter id="sketchyA" x="-20%" y="-20%" width="140%" height="140%">
+          <filter id="sketchyA" filterUnits="userSpaceOnUse" x="-50" y="-50" width="1000" height="1400">
             <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="4" result="n"/>
             <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
           </filter>
-          <filter id="sketchyB" x="-20%" y="-20%" width="140%" height="140%">
+          <filter id="sketchyB" filterUnits="userSpaceOnUse" x="-50" y="-50" width="1000" height="1400">
             <feTurbulence type="fractalNoise" baseFrequency="0.015 0.025" numOctaves="2" seed="11" result="n"/>
             <feDisplacementMap in="SourceGraphic" in2="n" scale="6" xChannelSelector="R" yChannelSelector="G"/>
           </filter>
@@ -211,14 +211,55 @@
             <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/>
           </filter>
         </defs>
+
+        <!-- city blocks: faint fills between streets, so the grid reads as blocks, not just lines -->
+        <g fill="var(--cobalt)" stroke="var(--cobalt)" stroke-width="0.9">
+          <rect x="106" y="156" width="138" height="208" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
+          <rect x="106" y="156" width="138" height="208" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
+          <rect x="276" y="396" width="128" height="148" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
+          <rect x="276" y="396" width="128" height="148" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
+          <rect x="436" y="156" width="108" height="208" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
+          <rect x="436" y="156" width="108" height="208" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
+          <rect x="576" y="576" width="108" height="130" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
+          <rect x="576" y="576" width="108" height="130" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
+          <rect x="716" y="396" width="98" height="148" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
+          <rect x="716" y="396" width="98" height="148" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
+          <rect x="106" y="738" width="138" height="146" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
+          <rect x="106" y="738" width="138" height="146" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
+          <rect x="276" y="916" width="128" height="86" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
+          <rect x="276" y="916" width="128" height="86" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
+          <rect x="436" y="738" width="108" height="146" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
+          <rect x="436" y="738" width="108" height="146" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
+          <rect x="576" y="916" width="108" height="86" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
+          <rect x="576" y="916" width="108" height="86" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
+          <rect x="716" y="1034" width="98" height="130" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
+          <rect x="716" y="1034" width="98" height="130" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
+          <rect x="106" y="1034" width="138" height="130" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
+          <rect x="106" y="1034" width="138" height="130" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
+          <rect x="436" y="1034" width="108" height="130" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
+          <rect x="436" y="1034" width="108" height="130" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
+        </g>
+
+        <!-- streets: a full grid, minor cross-streets thin, major avenues thicker -->
         <g stroke="var(--cobalt)" stroke-linecap="round" fill="none">
-          <path d="M6 380 H894" stroke-width="2.4" opacity="0.55" filter="url(#sketchyA)"/>
-          <path d="M6 722 H894" stroke-width="2.4" opacity="0.55" filter="url(#sketchyB)"/>
-          <path d="M6 1018 H894" stroke-width="2.4" opacity="0.55" filter="url(#sketchyA)"/>
-          <path d="M260 6 V1294" stroke-width="2.4" opacity="0.55" filter="url(#sketchyB)"/>
-          <path d="M560 6 V1294" stroke-width="2.4" opacity="0.55" filter="url(#sketchyA)"/>
-          <path d="M10 60 L890 980" stroke-width="2.4" opacity="0.5" filter="url(#sketchyB)"/>
-          <path d="M40 1100 Q 400 950 860 1180" stroke-width="10" opacity="0.28" filter="url(#sketchyA)"/>
+          <path d="M6 140 H894" stroke-width="2.2" opacity="0.45" filter="url(#sketchyB)"/>
+          <path d="M6 380 H894" stroke-width="3.6" opacity="0.7" filter="url(#sketchyA)"/>
+          <path d="M6 560 H894" stroke-width="2.2" opacity="0.45" filter="url(#sketchyB)"/>
+          <path d="M6 722 H894" stroke-width="3.6" opacity="0.7" filter="url(#sketchyB)"/>
+          <path d="M6 900 H894" stroke-width="2.2" opacity="0.45" filter="url(#sketchyA)"/>
+          <path d="M6 1018 H894" stroke-width="3.6" opacity="0.7" filter="url(#sketchyA)"/>
+          <path d="M6 1180 H894" stroke-width="2.2" opacity="0.45" filter="url(#sketchyB)"/>
+
+          <path d="M90 6 V1294" stroke-width="2.2" opacity="0.45" filter="url(#sketchyA)"/>
+          <path d="M260 6 V1294" stroke-width="3.6" opacity="0.7" filter="url(#sketchyB)"/>
+          <path d="M420 6 V1294" stroke-width="2.2" opacity="0.45" filter="url(#sketchyA)"/>
+          <path d="M560 6 V1294" stroke-width="3.6" opacity="0.7" filter="url(#sketchyA)"/>
+          <path d="M700 6 V1294" stroke-width="2.2" opacity="0.45" filter="url(#sketchyB)"/>
+          <path d="M830 6 V1294" stroke-width="2.2" opacity="0.45" filter="url(#sketchyA)"/>
+
+          <path d="M10 60 L890 980" stroke-width="3" opacity="0.55" filter="url(#sketchyB)"/>
+          <path d="M900 300 L40 1240" stroke-width="2" opacity="0.4" filter="url(#sketchyA)"/>
+          <path d="M40 1100 Q 400 950 860 1180" stroke-width="10" opacity="0.24" filter="url(#sketchyA)"/>
         </g>
       </svg>
       <div class="walker" id="w1"></div>

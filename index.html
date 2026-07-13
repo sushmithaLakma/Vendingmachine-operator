@@ -15,9 +15,9 @@
     --line-strong: rgba(23,24,27,0.24);
     --cobalt:#1D3AE8;
     --cobalt-soft: rgba(29,58,232,0.10);
-    --alert:#E0342E;
-    --alert-deep:#B82420;
-    --alert-soft: rgba(224,52,46,0.10);
+    --yellow:#F4C430;
+    --orange:#E8791E;
+    --orange-soft: rgba(232,121,30,0.10);
     --scrim: rgba(20,30,55,0.32);
     --sans: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
     --wide: "Arial", "Helvetica Neue", sans-serif;
@@ -51,14 +51,14 @@
     .device{ max-width:100%; height:100vh; max-height:100vh; border-radius:0; box-shadow:none; }
   }
 
-  /* ---------- Screens carousel ---------- */
+  /* ---------- Screens carousel (Map / List) ---------- */
   .screens-viewport{ position:absolute; inset:0; overflow:hidden; touch-action:pan-y; }
   .screens-track{
-    display:flex; width:300%; height:100%;
+    display:flex; width:200%; height:100%;
     transition: transform .32s cubic-bezier(.22,.8,.3,1);
   }
   .screens-track.dragging{ transition:none; }
-  .screen-panel{ width:33.3334%; height:100%; position:relative; overflow:hidden; flex:none; }
+  .screen-panel{ width:50%; height:100%; position:relative; overflow:hidden; flex:none; }
   @media (prefers-reduced-motion:reduce){ .screens-track{ transition:none; } }
 
   /* ---------- Map stage ---------- */
@@ -80,21 +80,22 @@
   .map-layer svg.streets{ position:absolute; inset:0; width:100%; height:100%; }
 
   .pin{
-    position:absolute; width:32px; height:40px; margin:-40px 0 0 -16px;
-    border:none; padding:0; cursor:pointer; background:none;
-    filter:drop-shadow(0 5px 8px rgba(23,24,27,0.18));
+    position:absolute; width:34px; height:34px; margin:-17px 0 0 -17px;
+    border:2.5px solid #fff; border-radius:50%; padding:0; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--wide); font-weight:800; font-size:10.5px; color:#fff;
+    box-shadow:0 6px 12px -4px rgba(23,24,27,0.35);
   }
-  .pin svg{ width:100%; height:100%; overflow:visible; }
   .pin.attention{ animation:pinpulse 2.2s ease-in-out infinite; }
   @keyframes pinpulse{
-    0%,100%{ transform:translateY(0); }
-    50%{ transform:translateY(-4px); }
+    0%,100%{ transform:translateY(0) scale(1); }
+    50%{ transform:translateY(-3px) scale(1.06); }
   }
   @media (prefers-reduced-motion:reduce){ .pin.attention{ animation:none; } }
 
   .walker{
     position:absolute; width:5px; height:5px; border-radius:50%; background:var(--cobalt);
-    opacity:0.3; pointer-events:none;
+    opacity:0.28; pointer-events:none;
   }
 
   /* ---------- Chrome overlay (fixed above map) ---------- */
@@ -117,9 +118,9 @@
   }
   #locInput:focus{ outline:none; }
 
-  /* ---------- Floating dock (jump to queue + geolocate) ---------- */
+  /* ---------- Floating dock ---------- */
   .dock{
-    position:absolute; right:16px; bottom:104px; z-index:3; display:flex; flex-direction:column; gap:10px;
+    position:absolute; right:16px; bottom:172px; z-index:3; display:flex; flex-direction:column; gap:10px;
   }
   .dock-btn{
     width:44px; height:44px; border-radius:50%; border:1px solid var(--line-strong);
@@ -129,6 +130,26 @@
   }
   .dock-btn:active{ transform:scale(0.94); }
   .dock-btn.primary{ background:var(--cobalt); color:#fff; border-color:transparent; }
+
+  /* ---------- Fixed legend strip (map screen only, does not pan) ---------- */
+  .legendwrap{
+    position:absolute; left:0; right:0; bottom:0; z-index:4;
+    padding:10px 0 90px;
+    background:linear-gradient(0deg, #fff 55%, rgba(255,255,255,0.85) 80%, transparent 100%);
+  }
+  .legend-title{ padding:0 18px 6px; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); }
+  .legend-scroll{ display:flex; gap:8px; overflow-x:auto; padding:0 18px; }
+  .legend-card{
+    flex:none; min-width:130px; background:#fff; border:1px solid var(--line); border-radius:14px;
+    padding:9px 11px; box-shadow:0 10px 22px -14px rgba(23,20,10,0.25);
+  }
+  .legend-cat{ font-size:9.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:5px; }
+  .legend-item{ display:flex; align-items:center; gap:7px; padding:2px 0; }
+  .legend-badge{
+    flex:none; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-family:var(--wide); font-weight:800; font-size:8px; color:#fff;
+  }
+  .legend-name{ font-size:11px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:96px; }
 
   /* ---------- Bottom nav ---------- */
   .navwrap{
@@ -142,89 +163,74 @@
   }
   .tab{
     background:none; border:none; cursor:pointer; color:var(--ink-faint);
-    font-size:12.5px; font-weight:700; padding:9px 20px; border-radius:15px;
+    font-size:12.5px; font-weight:700; padding:9px 26px; border-radius:15px;
   }
   .tab.active{ color:#fff; background:var(--cobalt); }
 
-  /* ---------- List & History screens ---------- */
+  /* ---------- List screen ---------- */
   .page{ position:absolute; inset:0; overflow-y:auto; padding-bottom:110px; -webkit-overflow-scrolling:touch; }
   .page-head{ padding:18px 18px 4px; }
   .page-title{ font-size:22px; }
   .searchrow{
-    margin:14px 18px 10px; display:flex; align-items:center; gap:8px;
+    margin:14px 18px 12px; display:flex; align-items:center; gap:8px;
     background:var(--paper-raised); border-radius:13px; padding:10px 12px;
   }
   .searchrow svg{ width:15px; height:15px; color:var(--ink-faint); flex:none; }
   .searchrow input{ border:none; background:none; font-size:13.5px; color:var(--ink); flex:1; min-width:0; }
   .searchrow input:focus{ outline:none; }
-  .chiprow{ display:flex; gap:8px; padding:0 18px 12px; overflow-x:auto; }
-  .chip{
-    flex:none; border:1.5px solid var(--line-strong); background:#fff; color:var(--ink-soft);
-    font-size:12px; font-weight:700; padding:7px 14px; border-radius:20px; cursor:pointer;
-  }
-  .chip.active{ background:var(--ink); color:#fff; border-color:var(--ink); }
 
   .list-row{
     display:flex; align-items:center; gap:12px; padding:13px 18px; border-bottom:1px solid var(--line);
     cursor:pointer;
   }
-  .list-shape{ flex:none; width:16px; height:16px; display:flex; align-items:center; justify-content:center; }
+  .list-when{ flex:none; width:56px; }
+  .list-when .d1{ font-size:11px; font-weight:700; color:var(--ink); }
+  .list-when .d2{ font-size:9.5px; color:var(--ink-faint); font-family:var(--mono); }
   .list-mid{ flex:1; min-width:0; }
   .list-name{ font-size:14px; font-weight:700; }
   .list-address{ font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
-  .list-status{ flex:none; font-size:11px; font-weight:700; }
+  .list-status{ flex:none; font-size:11px; font-weight:700; text-align:right; }
   .list-status.ok{ color:var(--cobalt); }
-  .list-status.alert{ color:var(--alert); }
+  .list-status.alert{ color:var(--orange); }
   .empty-state{ padding:40px 18px; text-align:center; color:var(--ink-faint); font-size:13px; }
 
-  .seg{
-    margin:4px 18px 12px; display:flex; background:var(--paper-raised); border-radius:12px; padding:3px; gap:2px;
-  }
-  .seg button{
-    flex:1; border:none; background:transparent; color:var(--ink-soft); font-size:12.5px;
-    font-weight:700; padding:8px 0; border-radius:9px; cursor:pointer;
-  }
-  .seg button.active{ background:var(--cobalt); color:#fff; }
-
-  .day-group{ padding:14px 18px 2px; }
-  .day-label{ font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); }
-  .event-row{ display:flex; gap:12px; padding:10px 18px; align-items:flex-start; }
-  .event-dot{ width:8px; height:8px; border-radius:50%; margin-top:5px; flex:none; }
-  .event-dot.restock{ background:var(--cobalt); }
-  .event-dot.repair{ background:var(--alert); }
-  .event-time{ font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); flex:none; width:58px; }
-  .event-text{ font-size:13px; }
-  .week-row{ display:flex; justify-content:space-between; align-items:center; padding:12px 18px; border-bottom:1px solid var(--line); }
-  .week-day{ font-size:13.5px; font-weight:700; }
-  .week-counts{ font-size:11.5px; color:var(--ink-soft); font-family:var(--mono); }
-
-  /* ---------- Bottom sheet (quick card) ---------- */
+  /* ---------- Quick card (no border, photo stack trigger) ---------- */
   .scrim{
     position:fixed; inset:0; background:var(--scrim); opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:40;
   }
   .scrim.show{ opacity:1; pointer-events:auto; }
   .sheet{
     position:absolute; left:14px; right:14px; bottom:calc(14px + env(safe-area-inset-bottom)); z-index:41;
-    background:#FFFFFF; border:2px solid var(--sheet-color, var(--cobalt)); border-radius:22px;
-    box-shadow:0 26px 50px -24px rgba(23,20,10,0.32);
+    background:#FFFFFF; border-radius:22px;
+    box-shadow:0 28px 60px -20px rgba(23,20,10,0.35);
     padding:18px 18px;
     transform:translateY(16px) scale(0.98); opacity:0; transition:transform .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease;
     pointer-events:none;
   }
   .sheet.show{ transform:translateY(0) scale(1); opacity:1; pointer-events:auto; }
-  .sheet-shape{ width:16px; height:16px; }
-  .sheet-name{ font-size:17px; font-weight:700; letter-spacing:-.01em; margin-top:6px; }
-  .sheet-address{ font-size:12px; color:var(--ink-soft); margin-top:2px; line-height:1.35; }
-  .sheet-issue{ font-size:13px; color:var(--ink-soft); line-height:1.5; margin-top:12px; }
-  .sheet-actions{ display:flex; gap:8px; margin-top:16px; }
-  .sheet-actions:empty{ margin-top:0; }
-  .sheet-btn{
-    flex:1; border-radius:13px; border:1.5px solid var(--cobalt); background:#fff;
-    color:var(--cobalt); font-size:13px; font-weight:700; padding:12px 6px; cursor:pointer; text-align:center;
+  .sheet-top{ display:flex; align-items:center; gap:10px; }
+  .sheet-badge{
+    flex:none; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-family:var(--wide); font-weight:800; font-size:11px; color:#fff;
   }
-  .sheet-btn.fill{ background:var(--alert); color:#fff; border-color:var(--alert); }
-  .sheet-btn.outline-alert{ color:var(--alert); border-color:var(--alert); }
-  .sheet-btn:active{ transform:scale(.97); }
+  .sheet-name{ font-size:16.5px; font-weight:700; letter-spacing:-.01em; }
+  .sheet-address{ font-size:12px; color:var(--ink-soft); margin-top:1px; line-height:1.3; }
+  .sheet-phrase{ font-size:13px; font-weight:700; margin-top:12px; }
+  .sheet-phrase.ok{ color:var(--cobalt); }
+  .sheet-phrase.alert{ color:var(--orange); }
+
+  .photo-stack-row{ display:flex; align-items:center; gap:12px; margin-top:16px; cursor:pointer; background:none; border:none; padding:0; width:100%; text-align:left; }
+  .photo-stack{ position:relative; width:58px; height:46px; flex:none; }
+  .photo-stack .tile{
+    position:absolute; width:44px; height:38px; border-radius:9px; background:var(--paper-raised);
+    border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--ink-faint);
+  }
+  .photo-stack .tile svg{ width:16px; height:16px; }
+  .photo-stack .tile:nth-child(1){ left:0; top:6px; transform:rotate(-8deg); z-index:1; }
+  .photo-stack .tile:nth-child(2){ left:8px; top:2px; transform:rotate(5deg); z-index:2; }
+  .photo-stack .tile:nth-child(3){ left:14px; top:0; transform:rotate(0deg); z-index:3; box-shadow:0 8px 16px -8px rgba(23,20,10,0.3); }
+  .photo-stack-label{ font-size:13px; font-weight:700; color:var(--cobalt); }
+  .photo-stack-label svg{ width:11px; height:11px; margin-left:3px; vertical-align:-1px; }
   .sheet-close{
     position:absolute; right:14px; top:14px; width:26px; height:26px; border-radius:50%; border:1px solid var(--line-strong);
     background:#fff; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:center;
@@ -234,7 +240,7 @@
   .drawer{
     position:fixed; left:0; right:0; bottom:0; z-index:51; max-width:428px; margin:0 auto;
     background:#fff; border-radius:24px 24px 0 0; box-shadow:0 -20px 60px -20px rgba(23,20,10,0.4);
-    max-height:86vh; display:flex; flex-direction:column;
+    max-height:88vh; display:flex; flex-direction:column;
     transform:translateY(100%); transition:transform .32s cubic-bezier(.2,.8,.2,1);
   }
   .drawer.show{ transform:translateY(0); }
@@ -246,9 +252,13 @@
   .drawer-body{ overflow-y:auto; padding:6px 20px calc(24px + env(safe-area-inset-bottom)); -webkit-overflow-scrolling:touch; }
 
   .d-back{ background:none; border:none; color:var(--cobalt); font-size:13px; font-weight:700; padding:6px 0 10px; cursor:pointer; display:flex; align-items:center; gap:4px; }
+  .d-top{ display:flex; align-items:center; gap:10px; }
   .d-title{ font-size:19px; margin-top:2px; }
   .d-address{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
-  .d-issue{ font-size:13px; color:var(--ink-soft); margin-top:10px; line-height:1.5; }
+  .d-phrase{ font-size:13px; font-weight:700; margin-top:10px; }
+  .d-phrase.ok{ color:var(--cobalt); }
+  .d-phrase.alert{ color:var(--orange); }
+  .d-issue{ font-size:13px; color:var(--ink-soft); margin-top:6px; line-height:1.5; }
 
   .photostrip{ display:flex; gap:10px; overflow-x:auto; margin:14px 0 4px; padding-bottom:2px; }
   .photo-tile{
@@ -257,17 +267,26 @@
   }
   .photo-tile svg{ width:34px; height:34px; }
 
+  /* ---------- Receipt-style inventory ---------- */
   .receipt{
-    margin-top:16px; border:1px dashed var(--line-strong); border-radius:14px; padding:14px 16px;
-    font-family:var(--mono);
+    position:relative; margin:22px 0 18px; padding:20px 18px 16px;
+    background-color:#FBF8F1;
+    background-image:
+      radial-gradient(circle at 10px 0, transparent 9px, #fff 9.4px),
+      radial-gradient(circle at 10px 100%, transparent 9px, #fff 9.4px);
+    background-size:20px 16px, 20px 16px;
+    background-position: top left, bottom left;
+    background-repeat: repeat-x, repeat-x;
   }
-  .receipt-title{ font-size:10.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); }
-  .receipt hr{ border:none; border-top:1px dashed var(--line-strong); margin:10px 0; }
-  .receipt-row{ display:flex; justify-content:space-between; gap:8px; font-size:12.5px; padding:5px 0; }
+  .receipt-brand{ font-family:var(--wide); font-weight:800; font-size:19px; letter-spacing:-.02em; color:#141414; text-align:center; }
+  .receipt-meta{ font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); text-align:center; margin-top:4px; }
+  .receipt hr{ border:none; border-top:1px dashed var(--line-strong); margin:12px 0; }
+  .receipt-row{ display:flex; justify-content:space-between; gap:8px; font-size:12.5px; padding:4px 0; font-family:var(--mono); }
   .receipt-row .name{ font-family:var(--sans); color:var(--ink); }
   .receipt-row .qty{ color:var(--ink-faint); white-space:nowrap; }
   .receipt-row .qty b{ color:var(--ink); font-weight:700; }
-  .receipt-row .qty b.low{ color:var(--alert); }
+  .receipt-row .qty b.low{ color:var(--orange); }
+  .receipt-row.total{ font-weight:700; color:var(--ink); }
 
   .section-label{ font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); margin:18px 0 8px; }
 
@@ -330,29 +349,29 @@
           <div class="map-layer" id="mapLayer">
             <div class="map-layer-content">
               <svg class="streets" viewBox="0 0 900 1300" fill="none">
-                <g stroke="var(--cobalt)" stroke-linecap="round" stroke-linejoin="round" fill="none">
+                <g stroke="var(--yellow)" stroke-linecap="round" stroke-linejoin="round" fill="none">
                   <path d="M520 -10 C 460 80 430 130 460 200 C 490 270 560 260 600 330
                             C 640 400 580 450 560 520 C 540 590 460 610 430 680
                             C 400 750 460 800 480 870 C 500 940 430 970 420 1040
                             C 410 1110 470 1150 500 1220 C 520 1265 560 1285 590 1310"
-                        stroke-width="5" opacity="0.7"/>
+                        stroke-width="15" opacity="0.95"/>
                   <path d="M460 200 C 380 210 320 190 260 210 C 200 230 150 210 90 240"
-                        stroke-width="3.2" opacity="0.55"/>
+                        stroke-width="11" opacity="0.85"/>
                   <path d="M600 330 C 660 300 700 260 740 210 C 770 175 800 160 840 130"
-                        stroke-width="3.2" opacity="0.55"/>
+                        stroke-width="11" opacity="0.85"/>
                   <path d="M560 520 C 480 540 430 580 440 650 C 448 710 390 730 370 790
                             C 350 850 360 910 320 960 C 295 992 260 1010 220 1030"
-                        stroke-width="3.2" opacity="0.55"/>
+                        stroke-width="11" opacity="0.85"/>
                   <path d="M430 680 C 350 690 300 720 260 780 C 225 832 190 860 150 900
                             C 120 932 110 970 90 1010"
-                        stroke-width="3.2" opacity="0.55"/>
+                        stroke-width="11" opacity="0.85"/>
                   <path d="M480 870 C 550 890 600 910 640 960 C 675 1005 690 1050 730 1090
                             C 765 1125 800 1140 840 1170"
-                        stroke-width="3.2" opacity="0.55"/>
-                  <path d="M840 130 C 862 220 852 300 820 380" stroke-width="2.2" opacity="0.4"/>
-                  <path d="M220 1030 C 170 1040 140 1060 100 1090" stroke-width="2.2" opacity="0.4"/>
-                  <path d="M90 1010 C 130 1050 160 1080 210 1100" stroke-width="2.2" opacity="0.4"/>
-                  <path d="M370 790 C 300 800 250 790 190 810" stroke-width="2.2" opacity="0.4"/>
+                        stroke-width="11" opacity="0.85"/>
+                  <path d="M840 130 C 862 220 852 300 820 380" stroke-width="7.5" opacity="0.7"/>
+                  <path d="M220 1030 C 170 1040 140 1060 100 1090" stroke-width="7.5" opacity="0.7"/>
+                  <path d="M90 1010 C 130 1050 160 1080 210 1100" stroke-width="7.5" opacity="0.7"/>
+                  <path d="M370 790 C 300 800 250 790 190 810" stroke-width="7.5" opacity="0.7"/>
                 </g>
               </svg>
               <div class="walker" id="w1"></div>
@@ -384,6 +403,11 @@
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 3v13M12 16l-5-5M12 16l5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </div>
+
+        <div class="legendwrap">
+          <div class="legend-title">Map key</div>
+          <div class="legend-scroll" id="legendScroll"></div>
+        </div>
       </section>
 
       <!-- ============ LIST SCREEN ============ -->
@@ -394,25 +418,8 @@
             <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             <input id="listSearch" placeholder="Search machines or locations" />
           </div>
-          <div class="chiprow" id="listChips"></div>
           <div id="listRows"></div>
           <div class="empty-state" id="listEmpty" style="display:none;">No machines match your search.</div>
-        </div>
-      </section>
-
-      <!-- ============ HISTORY SCREEN ============ -->
-      <section class="screen-panel">
-        <div class="page">
-          <div class="page-head"><div class="page-title wide-heading">History</div></div>
-          <div class="seg">
-            <button class="active" data-mode="day" onclick="setHistoryMode('day', this)">Day</button>
-            <button data-mode="week" onclick="setHistoryMode('week', this)">Week</button>
-          </div>
-          <div class="searchrow">
-            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            <input id="historySearch" placeholder="Search history" />
-          </div>
-          <div id="historyBody"></div>
         </div>
       </section>
 
@@ -423,7 +430,6 @@
     <nav class="navbar" aria-label="Primary">
       <button class="tab active" data-screen="0" onclick="setScreen(0)">Map</button>
       <button class="tab" data-screen="1" onclick="setScreen(1)">List</button>
-      <button class="tab" data-screen="2" onclick="setScreen(2)">History</button>
     </nav>
   </div>
 
@@ -432,11 +438,22 @@
     <button class="sheet-close" onclick="closeSheet()" aria-label="Close">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
     </button>
-    <div class="sheet-shape" id="sheetShape"></div>
-    <div class="sheet-name" id="sheetName">Machine</div>
-    <div class="sheet-address" id="sheetAddress">—</div>
-    <div class="sheet-issue" id="sheetIssue"></div>
-    <div class="sheet-actions" id="sheetActions"></div>
+    <div class="sheet-top">
+      <div class="sheet-badge" id="sheetBadge">—</div>
+      <div>
+        <div class="sheet-name" id="sheetName">Machine</div>
+        <div class="sheet-address" id="sheetAddress">—</div>
+      </div>
+    </div>
+    <div class="sheet-phrase" id="sheetPhrase"></div>
+    <button class="photo-stack-row" id="photoStackTrigger">
+      <div class="photo-stack">
+        <div class="tile"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/></svg></div>
+        <div class="tile"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/></svg></div>
+        <div class="tile"><svg viewBox="0 0 24 24" fill="none"><path d="M4 15l4.5-4.5L12 14l3-3 5 5" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.4"/></svg></div>
+      </div>
+      <span class="photo-stack-label">View more details <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </button>
   </div>
 
   <div class="drawer" id="drawer">
@@ -452,33 +469,59 @@
 
 <script>
 (function(){
+  /* ================= categories ================= */
+  const categories = {
+    transit:   { code:'T', label:'Transit' },
+    workplace: { code:'W', label:'Workplace' },
+    university:{ code:'U', label:'University' },
+    park:      { code:'P', label:'Park' },
+    hospital:  { code:'H', label:'Hospital' },
+    library:   { code:'L', label:'Library' },
+    gym:       { code:'G', label:'Gym' },
+  };
+
   /* ================= data ================= */
   const machines = [
-    { id:'#01', name:'Downtown Transit Hub', address:'Downtown Austin Transit Center', x:420, y:560, status:'ok',
-      category:'Snacks · Coffee', issue:'Fully stocked, running smoothly.', visit:'Today, 8:10a',
+    { id:'#01', name:'Downtown Transit Hub', address:'Downtown Austin Transit Center', category:'transit', x:420, y:560, status:'ok',
+      phrase:'Fully stocked', when:'Today', whenTime:'8:10 AM', listStatus:'Good',
+      issue:'Fully stocked, running smoothly.',
       inventory:[ {name:'Snack Mix', ordered:60, left:54}, {name:'Coffee Beans (kg)', ordered:20, left:17}, {name:'Bottled Water', ordered:40, left:36}, {name:'Granola Bars', ordered:30, left:26} ] },
-    { id:'#07', name:'Tech Corridor — Bldg C', address:'East Austin Tech Corridor, Bldg C', x:620, y:410, status:'critical',
-      category:'Snacks · Cold Drinks', issue:'Two columns empty since this morning. Card reader also flagged flaky — worth a look while restocking.', visit:'Yesterday',
+    { id:'#07', name:'Tech Corridor — Bldg C', address:'East Austin Tech Corridor, Bldg C', category:'workplace', x:620, y:410, status:'critical',
+      phrase:'Restock needed now', when:'Yesterday', whenTime:'9:20 AM', listStatus:'Pending',
+      issue:'Two columns empty since this morning. Card reader also flagged flaky — worth a look while restocking.',
       inventory:[ {name:'Snack Mix', ordered:60, left:0}, {name:'Cold Drinks', ordered:48, left:0}, {name:'Energy Bars', ordered:30, left:6}, {name:'Gum Packs', ordered:40, left:9} ] },
-    { id:'#05', name:'University Row', address:'University of Texas at Austin', x:290, y:290, status:'warning',
-      category:'Candy', issue:'Candy at 22% and selling fast — a campus event nearby is driving demand.', visit:'2 days ago',
+    { id:'#05', name:'University Row', address:'University of Texas at Austin', category:'university', x:290, y:290, status:'warning',
+      phrase:'Selling out fast', when:'2 days ago', whenTime:'4:45 PM', listStatus:'On the way',
+      issue:'Candy at 22% and selling fast — a campus event nearby is driving demand.',
       inventory:[ {name:'Candy Assorted', ordered:50, left:11}, {name:'Chips', ordered:40, left:18}, {name:'Soda Cans', ordered:36, left:20}, {name:'Granola Bars', ordered:24, left:14} ] },
-    { id:'#04', name:'Riverside Park', address:'Lady Bird Lake Riverside Park', x:190, y:700, status:'ok',
-      category:'Healthy · Snacks', issue:'Stocked, slightly overweighted on Healthy this week.', visit:'Yesterday',
+    { id:'#04', name:'Riverside Park', address:'Lady Bird Lake Riverside Park', category:'park', x:190, y:700, status:'ok',
+      phrase:'Fully stocked', when:'Yesterday', whenTime:'11:02 AM', listStatus:'Good',
+      issue:'Stocked, slightly overweighted on Healthy this week.',
       inventory:[ {name:'Healthy Snacks', ordered:30, left:22}, {name:'Bottled Water', ordered:40, left:33}, {name:'Trail Mix', ordered:24, left:19}, {name:'Sparkling Water', ordered:20, left:15} ] },
-    { id:'#09', name:'City Hospital Lobby', address:'Dell Seton Medical Center', x:520, y:790, status:'repair',
-      category:'Snacks · Coffee', issue:'Coin mechanism jammed. Card payments still work; coin sales are blocked until serviced.', visit:'3 days ago',
+    { id:'#09', name:'City Hospital Lobby', address:'Dell Seton Medical Center', category:'hospital', x:520, y:790, status:'repair',
+      phrase:'Needs repair', when:'3 days ago', whenTime:'3:15 PM', listStatus:'Scheduled',
+      issue:'Coin mechanism jammed. Card payments still work; coin sales are blocked until serviced.',
       inventory:[ {name:'Snack Mix', ordered:45, left:28}, {name:'Coffee Beans (kg)', ordered:18, left:12}, {name:'Bottled Water', ordered:36, left:24} ] },
-    { id:'#02', name:'Central Library', address:'Austin Central Library', x:380, y:460, status:'ok',
-      category:'Snacks · Coffee', issue:'Fully stocked.', visit:'Today, 7:40a',
+    { id:'#02', name:'Central Library', address:'Austin Central Library', category:'library', x:380, y:460, status:'ok',
+      phrase:'Fully stocked', when:'Today', whenTime:'7:40 AM', listStatus:'Good',
+      issue:'Fully stocked.',
       inventory:[ {name:'Snack Mix', ordered:40, left:35}, {name:'Coffee Beans (kg)', ordered:16, left:13}, {name:'Granola Bars', ordered:24, left:20} ] },
-    { id:'#12', name:'Airport Terminal B', address:'Austin-Bergstrom Intl Airport', x:710, y:990, status:'critical',
-      category:'Snacks', issue:'Snacks empty for ~40 minutes on a high-traffic route — highest sales-loss risk right now.', visit:'Yesterday',
+    { id:'#12', name:'Airport Terminal B', address:'Austin-Bergstrom Intl Airport', category:'transit', x:710, y:990, status:'critical',
+      phrase:'Nearly out of stock', when:'Yesterday', whenTime:'1:30 PM', listStatus:'Scheduled',
+      issue:'Snacks empty for ~40 minutes on a high-traffic route — highest sales-loss risk right now.',
       inventory:[ {name:'Snack Mix', ordered:70, left:0}, {name:'Chips', ordered:50, left:4}, {name:'Bottled Water', ordered:48, left:10}, {name:'Candy Assorted', ordered:40, left:7} ] },
-    { id:'#08', name:'Westside Gym', address:'Westside Fitness Center', x:150, y:960, status:'ok',
-      category:'Healthy · Cold Drinks', issue:'Fully stocked.', visit:'2 days ago',
+    { id:'#08', name:'Westside Gym', address:'Westside Fitness Center', category:'gym', x:150, y:960, status:'ok',
+      phrase:'Fully stocked', when:'2 days ago', whenTime:'1:30 PM', listStatus:'Good',
+      issue:'Fully stocked.',
       inventory:[ {name:'Protein Bars', ordered:36, left:29}, {name:'Sparkling Water', ordered:30, left:24}, {name:'Sports Drink', ordered:30, left:21} ] },
   ];
+
+  // assign badge codes per category (T1, T2, U1, G1, ...)
+  const catCounters = {};
+  machines.forEach(m=>{
+    catCounters[m.category] = (catCounters[m.category]||0) + 1;
+    m.badge = categories[m.category].code + catCounters[m.category];
+  });
 
   const distributors = [
     { name:'Metro Supply Co.', available:true, note:'Available now · 12 min away' },
@@ -492,58 +535,9 @@
   ];
   const timeSlots = ['Today · 2:00 PM','Today · 4:30 PM','Tomorrow · 9:00 AM','Tomorrow · 1:00 PM'];
 
-  const historyDay = [
-    { label:'Today', items:[
-      { time:'8:10 AM', text:'Restocked — Downtown Transit Hub', type:'restock' },
-      { time:'7:40 AM', text:'Restocked — Central Library', type:'restock' },
-    ]},
-    { label:'Yesterday', items:[
-      { time:'3:15 PM', text:'Repair reported — City Hospital Lobby', type:'repair' },
-      { time:'11:02 AM', text:'Restocked — Riverside Park', type:'restock' },
-      { time:'9:20 AM', text:'Restocked — Tech Corridor Bldg C', type:'restock' },
-    ]},
-    { label:'2 days ago', items:[
-      { time:'4:45 PM', text:'Low stock flagged — University Row', type:'restock' },
-      { time:'1:30 PM', text:'Restocked — Westside Gym', type:'restock' },
-    ]},
-    { label:'3 days ago', items:[
-      { time:'10:05 AM', text:'Repair completed — Airport Terminal B', type:'repair' },
-    ]},
-  ];
-  const historyWeek = [
-    { day:'Monday', restocks:4, repairs:1 },
-    { day:'Tuesday', restocks:2, repairs:0 },
-    { day:'Wednesday', restocks:5, repairs:1 },
-    { day:'Thursday', restocks:3, repairs:0 },
-    { day:'Friday', restocks:6, repairs:2 },
-    { day:'Saturday', restocks:2, repairs:0 },
-    { day:'Sunday', restocks:1, repairs:0 },
-  ];
+  function statusColor(m){ return m.status==='ok' ? '#1D3AE8' : '#E8791E'; }
+  function statusClass(m){ return m.status==='ok' ? 'ok' : 'alert'; }
 
-  const statusMeta = {
-    ok:       { color:'var(--cobalt)', label:'Good',    shape:'circle'   },
-    warning:  { color:'var(--alert)',  label:'Restock', shape:'square'   },
-    critical: { color:'var(--alert)',  label:'Restock', shape:'square'   },
-    repair:   { color:'var(--alert)',  label:'Repair',  shape:'triangle' },
-  };
-
-  function shapeSvg(shape, color, size){
-    size = size || 14;
-    if(shape==='circle') return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5" fill="'+color+'"/></svg>';
-    if(shape==='square')  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 14 14"><rect x="2" y="2" width="10" height="10" rx="2" fill="'+color+'"/></svg>';
-    return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 14 14"><path d="M7 1.5 L13 12.5 H1 Z" fill="'+color+'"/></svg>';
-  }
-  function pinSvg(shape, color){
-    return '<svg viewBox="0 0 32 40" fill="none">'+
-      '<path d="M16 1.5C8.8 1.5 3 7.3 3 14.4c0 9.2 13 24.1 13 24.1s13-14.9 13-24.1C29 7.3 23.2 1.5 16 1.5Z" fill="#fff" stroke="'+color+'" stroke-width="2.2"/>'+
-      shapeInner(shape, color)+
-    '</svg>';
-  }
-  function shapeInner(shape, color){
-    if(shape==='circle') return '<circle cx="16" cy="14.5" r="5" fill="'+color+'"/>';
-    if(shape==='square') return '<rect x="11.3" y="9.8" width="9.4" height="9.4" rx="1.6" fill="'+color+'"/>';
-    return '<path d="M16 9 L21 19 H11 Z" fill="'+color+'"/>';
-  }
   function photoTiles(){
     const icons = [
       '<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2" stroke="currentColor" stroke-width="1.6"/><rect x="7.3" y="5" width="4" height="4" rx="0.6" stroke="currentColor" stroke-width="1.3"/><rect x="12.7" y="5" width="4" height="4" rx="0.6" stroke="currentColor" stroke-width="1.3"/></svg>',
@@ -556,15 +550,29 @@
   /* ================= map pins ================= */
   const pinLayer = document.getElementById('pinLayer');
   machines.forEach(m=>{
-    const meta = statusMeta[m.status];
     const btn = document.createElement('button');
     btn.className = 'pin' + (m.status!=='ok' ? ' attention' : '');
     btn.style.left = m.x+'px'; btn.style.top = m.y+'px';
-    const solidColor = m.status==='ok' ? '#1D3AE8' : '#E0342E';
-    btn.innerHTML = pinSvg(meta.shape, solidColor);
-    btn.setAttribute('aria-label', m.name+' — '+meta.label);
+    btn.style.background = statusColor(m);
+    btn.textContent = m.badge;
+    btn.setAttribute('aria-label', m.name+' — '+m.phrase);
     btn.addEventListener('click', ()=>{ zoomTo(ZOOM_IN, m.x, m.y); openSheet(m); });
     pinLayer.appendChild(btn);
+  });
+
+  /* ================= legend (fixed, doesn't pan with map) ================= */
+  const legendScroll = document.getElementById('legendScroll');
+  const catOrder = ['transit','workplace','university','park','hospital','library','gym'];
+  catOrder.forEach(catKey=>{
+    const list = machines.filter(m=>m.category===catKey);
+    if(!list.length) return;
+    const card = document.createElement('div');
+    card.className = 'legend-card';
+    card.innerHTML = '<div class="legend-cat">'+categories[catKey].label+'</div>' +
+      list.map(m=>
+        '<div class="legend-item"><span class="legend-badge" style="background:'+statusColor(m)+'">'+m.badge+'</span><span class="legend-name">'+m.name+'</span></div>'
+      ).join('');
+    legendScroll.appendChild(card);
   });
 
   /* ================= quick card (sheet) ================= */
@@ -574,34 +582,23 @@
 
   window.openSheet = function(m){
     currentMachine = m;
-    const meta = statusMeta[m.status];
-    const solidColor = m.status==='ok' ? '#1D3AE8' : '#E0342E';
-    document.getElementById('sheetShape').innerHTML = shapeSvg(meta.shape, solidColor, 16);
+    const color = statusColor(m);
+    document.getElementById('sheetBadge').textContent = m.badge;
+    document.getElementById('sheetBadge').style.background = color;
     document.getElementById('sheetName').textContent = m.name;
     document.getElementById('sheetAddress').textContent = m.address;
-    document.getElementById('sheetIssue').textContent = m.issue;
-    sheet.style.setProperty('--sheet-color', solidColor);
-
-    const actions = document.getElementById('sheetActions');
-    actions.innerHTML = '';
-    if(m.status==='repair'){
-      actions.appendChild(makeBtn('Know more', 'outline-alert', ()=> openRepairDrawer(m)));
-    } else if(m.status!=='ok'){
-      actions.appendChild(makeBtn('View more details', '', ()=> openInventoryDrawer(m)));
-      actions.appendChild(makeBtn('Restock', 'fill', ()=>{ showToast('Restock dispatched for '+m.id); }));
-    }
-    // status 'ok' -> no buttons at all
+    const phraseEl = document.getElementById('sheetPhrase');
+    phraseEl.textContent = m.phrase;
+    phraseEl.className = 'sheet-phrase ' + statusClass(m);
 
     scrim.classList.add('show');
     sheet.classList.add('show');
   };
-  function makeBtn(label, cls, onClick){
-    const b = document.createElement('button');
-    b.className = 'sheet-btn' + (cls?' '+cls:'');
-    b.textContent = label;
-    b.addEventListener('click', onClick);
-    return b;
-  }
+  document.getElementById('photoStackTrigger').addEventListener('click', ()=>{
+    if(!currentMachine) return;
+    if(currentMachine.status==='repair'){ openRepairDrawer(currentMachine); }
+    else { openInventoryDrawer(currentMachine); }
+  });
   window.closeSheet = function(){
     scrim.classList.remove('show'); sheet.classList.remove('show');
     zoomOut();
@@ -616,24 +613,43 @@
     zoomOut();
   };
 
+  function headerBlock(m){
+    return '<div class="d-top">'+
+        '<div class="sheet-badge" style="background:'+statusColor(m)+'">'+m.badge+'</div>'+
+        '<div><div class="d-title wide-heading">'+m.name+'</div><div class="d-address">'+m.address+'</div></div>'+
+      '</div>'+
+      '<div class="d-phrase '+statusClass(m)+'">'+m.phrase+'</div>'+
+      '<div class="d-issue">'+m.issue+'</div>';
+  }
+  function receiptBlock(m){
+    const rows = m.inventory.map(it=>
+      '<div class="receipt-row"><span class="name">'+it.name+'</span><span class="qty">'+it.ordered+' ordered · <b'+(it.left===0?' class="low"':'')+'>'+it.left+' left</b></span></div>'
+    ).join('');
+    const totalOrdered = m.inventory.reduce((s,it)=>s+it.ordered,0);
+    const totalLeft = m.inventory.reduce((s,it)=>s+it.left,0);
+    return '<div class="receipt">'+
+        '<div class="receipt-brand">INVENTORY</div>'+
+        '<div class="receipt-meta">'+m.badge+' · '+m.when+' · '+m.whenTime+'</div>'+
+        '<hr>'+
+        rows+
+        '<hr>'+
+        '<div class="receipt-row total"><span>TOTAL ORDERED</span><span>'+totalOrdered+'</span></div>'+
+        '<div class="receipt-row total"><span>TOTAL LEFT</span><span>'+totalLeft+'</span></div>'+
+      '</div>';
+  }
+
   window.openInventoryDrawer = function(m){
     renderInventoryStep(m);
     showDrawer();
   };
   function renderInventoryStep(m){
-    const rows = m.inventory.map(it=>
-      '<div class="receipt-row"><span class="name">'+it.name+'</span><span class="qty">'+it.ordered+' ordered · <b'+(it.left===0?' class="low"':'')+'>'+it.left+' left</b></span></div>'
-    ).join('');
+    const needsAction = m.status!=='ok';
     drawerBody.innerHTML =
-      '<div class="d-title wide-heading">'+m.name+'</div>'+
-      '<div class="d-address">'+m.address+'</div>'+
+      headerBlock(m)+
       photoTiles()+
-      '<div class="receipt">'+
-        '<div class="receipt-title">Current inventory</div><hr>'+
-        rows+
-      '</div>'+
-      '<button class="drawer-cta" id="notifyBtn">Notify delivery</button>';
-    document.getElementById('notifyBtn').addEventListener('click', ()=> renderDistributorStep(m));
+      receiptBlock(m)+
+      (needsAction ? '<button class="drawer-cta" id="notifyBtn">Notify delivery</button>' : '');
+    if(needsAction) document.getElementById('notifyBtn').addEventListener('click', ()=> renderDistributorStep(m));
   }
   function renderDistributorStep(m){
     const rows = distributors.map((d,i)=>
@@ -662,10 +678,9 @@
       '<button class="pick-btn" data-i="'+i+'">Assign</button></div>'
     ).join('');
     drawerBody.innerHTML =
-      '<div class="d-title wide-heading">'+m.name+'</div>'+
-      '<div class="d-address">'+m.address+'</div>'+
-      '<div class="d-issue">'+m.issue+'</div>'+
+      headerBlock(m)+
       photoTiles()+
+      receiptBlock(m)+
       '<div class="section-label">Assign a technician</div>'+
       rows;
     drawerBody.querySelectorAll('.pick-btn').forEach(btn=>{
@@ -811,94 +826,41 @@
   });
 
   /* ================= list screen ================= */
-  const listChips = document.getElementById('listChips');
   const listRows = document.getElementById('listRows');
   const listEmpty = document.getElementById('listEmpty');
   const listSearch = document.getElementById('listSearch');
-  let listFilter = 'all';
-  ['all','ok','restock','repair'].forEach(f=>{
-    const b = document.createElement('button');
-    b.className = 'chip' + (f==='all'?' active':'');
-    b.textContent = f==='all'?'All':f==='ok'?'Good':f==='restock'?'Restock':'Repair';
-    b.addEventListener('click', ()=>{
-      listChips.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-      b.classList.add('active'); listFilter = f; renderList();
-    });
-    listChips.appendChild(b);
-  });
   listSearch.addEventListener('input', renderList);
-  function machineFilterCategory(m){
-    if(m.status==='ok') return 'ok';
-    if(m.status==='repair') return 'repair';
-    return 'restock';
-  }
   function renderList(){
     const q = listSearch.value.trim().toLowerCase();
-    const rows = machines.filter(m=>{
-      const matchesFilter = listFilter==='all' || machineFilterCategory(m)===listFilter;
-      const matchesSearch = !q || m.name.toLowerCase().includes(q) || m.address.toLowerCase().includes(q);
-      return matchesFilter && matchesSearch;
-    });
+    const rows = machines.filter(m=> !q || m.name.toLowerCase().includes(q) || m.address.toLowerCase().includes(q));
     listRows.innerHTML = '';
     listEmpty.style.display = rows.length ? 'none' : 'block';
     rows.forEach(m=>{
-      const meta = statusMeta[m.status];
-      const solidColor = m.status==='ok' ? '#1D3AE8' : '#E0342E';
+      const [d1, d2] = m.when.includes(' ')&&m.when!=='Today'&&m.when!=='Yesterday' ? [m.when, m.whenTime] : [m.when, m.whenTime];
       const row = document.createElement('div');
       row.className = 'list-row';
       row.innerHTML =
-        '<div class="list-shape">'+shapeSvg(meta.shape, solidColor, 15)+'</div>'+
+        '<div class="list-when"><div class="d1">'+m.when+'</div><div class="d2">'+m.whenTime+'</div></div>'+
         '<div class="list-mid"><div class="list-name">'+m.name+'</div><div class="list-address">'+m.address+'</div></div>'+
-        '<div class="list-status '+(m.status==='ok'?'ok':'alert')+'">'+meta.label+'</div>';
-      row.addEventListener('click', ()=>{ setScreen(0); setTimeout(()=>{ zoomTo(ZOOM_IN, m.x, m.y); openSheet(m); }, 340); });
+        '<div class="list-status '+statusClass(m)+'">'+m.listStatus+'</div>';
+      row.addEventListener('click', ()=>{
+        if(m.status==='repair'){ openRepairDrawer(m); } else { openInventoryDrawer(m); }
+      });
       listRows.appendChild(row);
     });
   }
   renderList();
 
-  /* ================= history screen ================= */
-  let historyMode = 'day';
-  window.setHistoryMode = function(mode, btn){
-    historyMode = mode;
-    document.querySelectorAll('.seg button').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    renderHistory();
-  };
-  const historySearch = document.getElementById('historySearch');
-  historySearch.addEventListener('input', renderHistory);
-  function plural(n, word){ return n + ' ' + word + (n===1?'':'s'); }
-  function renderHistory(){
-    const body = document.getElementById('historyBody');
-    const q = historySearch.value.trim().toLowerCase();
-    if(historyMode==='day'){
-      body.innerHTML = historyDay.map(group=>{
-        const items = group.items.filter(it=> !q || it.text.toLowerCase().includes(q));
-        if(!items.length) return '';
-        return '<div class="day-group"><div class="day-label">'+group.label+'</div></div>' +
-          items.map(it=>
-            '<div class="event-row"><span class="event-dot '+it.type+'"></span>'+
-            '<span class="event-time">'+it.time+'</span><span class="event-text">'+it.text+'</span></div>'
-          ).join('');
-      }).join('');
-      if(!body.innerHTML) body.innerHTML = '<div class="empty-state">No matching history.</div>';
-    } else {
-      body.innerHTML = historyWeek.map(d=>
-        '<div class="week-row"><span class="week-day">'+d.day+'</span>'+
-        '<span class="week-counts">'+plural(d.restocks,'restock')+' · '+plural(d.repairs,'repair')+'</span></div>'
-      ).join('');
-    }
-  }
-  renderHistory();
-
   /* ================= screens: tap + swipe ================= */
   const screensViewport = document.getElementById('screensViewport');
   const screensTrack = document.getElementById('screensTrack');
   const tabs = document.querySelectorAll('.navbar .tab');
+  const SCREEN_COUNT = 2;
   let screenIndex = 0;
 
   window.setScreen = function(i){
     screenIndex = i;
-    screensTrack.style.transform = 'translateX(-'+(i*100/3)+'%)';
+    screensTrack.style.transform = 'translateX(-'+(i*100/SCREEN_COUNT)+'%)';
     tabs.forEach(t=> t.classList.toggle('active', +t.dataset.screen===i));
   };
 
@@ -907,7 +869,7 @@
     if(e.target.closest('#mapViewport')) return; // map handles its own drag
     swipeActive=true; deciding=true; isHorizontal=false;
     swipeStartX=e.clientX; swipeStartY=e.clientY;
-    swipeBaseX = -(screenIndex*100/3);
+    swipeBaseX = -(screenIndex*100/SCREEN_COUNT);
   });
   screensViewport.addEventListener('pointermove', (e)=>{
     if(!swipeActive) return;
@@ -920,9 +882,9 @@
     }
     if(!isHorizontal) return;
     const vw = screensViewport.clientWidth || 1;
-    const deltaPct = (dx/vw) * (100/3);
+    const deltaPct = (dx/vw) * (100/SCREEN_COUNT);
     let pct = swipeBaseX + deltaPct;
-    pct = Math.max(-200/3, Math.min(0, pct));
+    pct = Math.max(-100*(SCREEN_COUNT-1)/SCREEN_COUNT, Math.min(0, pct));
     screensTrack.style.transform = 'translateX('+pct+'%)';
   });
   function swipeEnd(e){
@@ -933,7 +895,7 @@
     const dx = (e.clientX||swipeStartX) - swipeStartX;
     const vw = screensViewport.clientWidth || 1;
     let next = screenIndex;
-    if(dx < -vw*0.18 && screenIndex<2) next = screenIndex+1;
+    if(dx < -vw*0.18 && screenIndex<SCREEN_COUNT-1) next = screenIndex+1;
     else if(dx > vw*0.18 && screenIndex>0) next = screenIndex-1;
     setScreen(next);
   }

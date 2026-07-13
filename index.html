@@ -64,6 +64,12 @@
     background:#FFFFFF; transform-origin:0 0;
     will-change:transform;
   }
+  .map-layer-content{
+    position:absolute; inset:0;
+    -webkit-mask-image: radial-gradient(ellipse 60% 54% at 50% 45%, #000 58%, transparent 100%);
+    mask-image: radial-gradient(ellipse 60% 54% at 50% 45%, #000 58%, transparent 100%);
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  }
   .map-layer svg.streets{ position:absolute; inset:0; width:100%; height:100%; }
 
   .pin{
@@ -196,6 +202,7 @@
 <div class="device">
   <div class="map-viewport" id="mapViewport">
     <div class="map-layer" id="mapLayer">
+      <div class="map-layer-content">
       <svg class="streets" viewBox="0 0 900 1300" fill="none">
         <defs>
           <filter id="sketchyA" filterUnits="userSpaceOnUse" x="-50" y="-50" width="1000" height="1400">
@@ -212,54 +219,34 @@
           </filter>
         </defs>
 
-        <!-- city blocks: faint fills between streets, so the grid reads as blocks, not just lines -->
-        <g fill="var(--cobalt)" stroke="var(--cobalt)" stroke-width="0.9">
-          <rect x="106" y="156" width="138" height="208" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
-          <rect x="106" y="156" width="138" height="208" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
-          <rect x="276" y="396" width="128" height="148" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
-          <rect x="276" y="396" width="128" height="148" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
-          <rect x="436" y="156" width="108" height="208" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
-          <rect x="436" y="156" width="108" height="208" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
-          <rect x="576" y="576" width="108" height="130" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
-          <rect x="576" y="576" width="108" height="130" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
-          <rect x="716" y="396" width="98" height="148" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
-          <rect x="716" y="396" width="98" height="148" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
-          <rect x="106" y="738" width="138" height="146" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
-          <rect x="106" y="738" width="138" height="146" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
-          <rect x="276" y="916" width="128" height="86" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
-          <rect x="276" y="916" width="128" height="86" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
-          <rect x="436" y="738" width="108" height="146" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
-          <rect x="436" y="738" width="108" height="146" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
-          <rect x="576" y="916" width="108" height="86" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
-          <rect x="576" y="916" width="108" height="86" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
-          <rect x="716" y="1034" width="98" height="130" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
-          <rect x="716" y="1034" width="98" height="130" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
-          <rect x="106" y="1034" width="138" height="130" rx="4" opacity="0.05" filter="url(#sketchyA)"/>
-          <rect x="106" y="1034" width="138" height="130" rx="4" fill="none" opacity="0.22" filter="url(#sketchyA)"/>
-          <rect x="436" y="1034" width="108" height="130" rx="4" opacity="0.05" filter="url(#sketchyB)"/>
-          <rect x="436" y="1034" width="108" height="130" rx="4" fill="none" opacity="0.22" filter="url(#sketchyB)"/>
-        </g>
+        <!-- roads only: an organic, winding network — no grid, no blocks -->
+        <g stroke="var(--cobalt)" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M560 -10 C 480 90 430 140 380 220 C 320 315 260 330 280 410
+                    C 300 490 400 470 440 550 C 480 630 400 660 370 730
+                    C 340 800 380 840 430 900 C 480 960 440 1010 470 1080
+                    C 495 1140 560 1160 590 1220 C 610 1262 640 1280 660 1310"
+                stroke-width="4.2" opacity="0.62" filter="url(#sketchyA)"/>
 
-        <!-- streets: a full grid, minor cross-streets thin, major avenues thicker -->
-        <g stroke="var(--cobalt)" stroke-linecap="round" fill="none">
-          <path d="M6 140 H894" stroke-width="2.2" opacity="0.45" filter="url(#sketchyB)"/>
-          <path d="M6 380 H894" stroke-width="3.6" opacity="0.7" filter="url(#sketchyA)"/>
-          <path d="M6 560 H894" stroke-width="2.2" opacity="0.45" filter="url(#sketchyB)"/>
-          <path d="M6 722 H894" stroke-width="3.6" opacity="0.7" filter="url(#sketchyB)"/>
-          <path d="M6 900 H894" stroke-width="2.2" opacity="0.45" filter="url(#sketchyA)"/>
-          <path d="M6 1018 H894" stroke-width="3.6" opacity="0.7" filter="url(#sketchyA)"/>
-          <path d="M6 1180 H894" stroke-width="2.2" opacity="0.45" filter="url(#sketchyB)"/>
+          <path d="M380 220 C 300 235 230 220 170 250 C 120 275 90 270 30 300"
+                stroke-width="2.4" opacity="0.42" filter="url(#sketchyB)"/>
 
-          <path d="M90 6 V1294" stroke-width="2.2" opacity="0.45" filter="url(#sketchyA)"/>
-          <path d="M260 6 V1294" stroke-width="3.6" opacity="0.7" filter="url(#sketchyB)"/>
-          <path d="M420 6 V1294" stroke-width="2.2" opacity="0.45" filter="url(#sketchyA)"/>
-          <path d="M560 6 V1294" stroke-width="3.6" opacity="0.7" filter="url(#sketchyA)"/>
-          <path d="M700 6 V1294" stroke-width="2.2" opacity="0.45" filter="url(#sketchyB)"/>
-          <path d="M830 6 V1294" stroke-width="2.2" opacity="0.45" filter="url(#sketchyA)"/>
+          <path d="M280 410 C 210 435 160 470 185 540 C 205 600 165 640 150 710
+                    C 135 775 130 850 105 930 C 90 980 105 1020 80 1080"
+                stroke-width="2.6" opacity="0.46" filter="url(#sketchyB)"/>
 
-          <path d="M10 60 L890 980" stroke-width="3" opacity="0.55" filter="url(#sketchyB)"/>
-          <path d="M900 300 L40 1240" stroke-width="2" opacity="0.4" filter="url(#sketchyA)"/>
-          <path d="M40 1100 Q 400 950 860 1180" stroke-width="10" opacity="0.24" filter="url(#sketchyA)"/>
+          <path d="M440 550 C 520 525 590 490 630 435 C 660 390 655 350 700 310
+                    C 735 278 775 260 820 235"
+                stroke-width="2.6" opacity="0.46" filter="url(#sketchyA)"/>
+
+          <path d="M430 900 C 500 915 545 935 565 985 C 585 1030 585 1075 630 1110
+                    C 665 1137 705 1150 750 1175 C 790 1197 800 1235 830 1270"
+                stroke-width="2.4" opacity="0.42" filter="url(#sketchyB)"/>
+
+          <path d="M150 710 C 250 745 320 760 415 775"
+                stroke-width="1.8" opacity="0.3" filter="url(#sketchyA)"/>
+
+          <path d="M80 1080 C 120 1120 150 1145 205 1160"
+                stroke-width="1.8" opacity="0.3" filter="url(#sketchyB)"/>
         </g>
       </svg>
       <div class="walker" id="w1"></div>
@@ -269,6 +256,7 @@
       <div class="walker" id="w5"></div>
 
       <div id="pinLayer"></div>
+      </div>
     </div>
   </div>
 

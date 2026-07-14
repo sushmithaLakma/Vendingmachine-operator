@@ -393,7 +393,7 @@
   function needsAttention(m){ return m.status==="low" || m.status==="repair"; }
 
   function statusLabel(s){
-    return s==="ok" ? "Fully stocked" : s==="low" ? "Low stock" : "Needs repair";
+    return s==="ok" ? "Stocked" : s==="low" ? "Low stock" : "Needs repair";
   }
   function heroTint(s){
     return s==="ok" ? "var(--olive-tint)" : s==="low" ? "var(--terracotta-tint)" : "var(--repair-tint)";
@@ -646,7 +646,8 @@
     if (state.activeId===m.id) renderMachineSheet();
 
     toastStatus(type, "complete", type==="restock" ? "Delivered" : "Repaired",
-      m.code + " is back to full status", "Completed at", formatTime(new Date()));
+      type==="restock" ? m.code + " is fully restocked" : m.code + " is back online",
+      "Completed at", formatTime(new Date()));
   }
 
   /* ---------- Time helpers ---------- */

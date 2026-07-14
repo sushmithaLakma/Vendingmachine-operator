@@ -6,41 +6,32 @@
 <title>VendOps</title>
 <style>
   :root{
-    --ok:#1DAA5C;
-    --ok-soft:#E4F7EC;
-    --low:#D98A0B;
-    --low-soft:#FCF0DA;
-    --repair:#DC4C4C;
-    --repair-soft:#FBE6E6;
-    --accent:#2757D6;
-    --accent-soft:#E8EEFC;
-    --bg:#F4F5F7;
-    --ink:#17181B;
-    --muted:#6B7280;
-    --faint:#9CA3AF;
+    --cream:#F5F0E6;
+    --cream-2:#ECE4D3;
     --card:#FFFFFF;
-    --border:#E7E8EC;
-    --map-road:#E4DFC9;
-    --map-block:#EDEAD8;
-    --map-green:#DCEBDA;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --ok:#39C879; --ok-soft:#12291D;
-      --low:#F0A93A; --low-soft:#2E2311;
-      --repair:#F0685F; --repair-soft:#331717;
-      --accent:#5C87F2; --accent-soft:#182140;
-      --bg:#111216; --ink:#F2F3F5; --muted:#9AA0AC; --faint:#5B606B;
-      --card:#1B1C21; --border:#2B2D33;
-      --map-road:#2A2C24; --map-block:#1D1F1A; --map-green:#182A20;
-    }
+    --olive:#5B6B36;
+    --olive-deep:#31391D;
+    --purple:#7C6FC4;
+    --purple-tint:#E9E5F6;
+    --terracotta:#DE8A4C;
+    --terracotta-tint:#FBE7D4;
+    --repair:#B5472C;
+    --repair-tint:#F5DCD3;
+    --olive-tint:#E4E9D6;
+    --ink:#241F16;
+    --muted:#8B8272;
+    --faint:#B0A996;
+    --border:#E4DCC8;
+    --map-bg:#2C3420;
+    --map-road:#48532F;
+    --map-water:#232A17;
   }
   *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body{ margin:0; padding:0; }
   body{
     background:#FFFFFF;
     color:var(--ink);
-    font-family:-apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing:antialiased;
     min-height:100vh;
     display:flex; justify-content:center; align-items:flex-start;
@@ -50,7 +41,7 @@
 
   .device{
     width:100%; max-width:428px; height:920px; max-height:92vh;
-    background:var(--bg);
+    background:var(--cream);
     border-radius:34px; overflow:hidden; position:relative;
     box-shadow:0 40px 80px -30px rgba(20,17,10,0.28), 0 0 0 1px rgba(23,24,27,0.24);
   }
@@ -63,74 +54,64 @@
 
   /* ---------- Header ---------- */
   .topbar{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 6px;
-    flex-shrink:0; background:var(--bg); position:relative; z-index:5;
+    padding:calc(env(safe-area-inset-top,0px) + 16px) 18px 4px;
+    flex-shrink:0; background:var(--cream); position:relative; z-index:5;
   }
-  .brand{ font-size:19px; font-weight:800; letter-spacing:-0.01em; }
+  .brand{ font-size:19px; font-weight:800; letter-spacing:-0.01em; color:var(--ink); }
   .brand-sub{ font-size:12px; color:var(--muted); font-weight:500; margin-top:1px; }
-  .alert-pill{
-    display:flex; align-items:center; gap:5px;
-    background:var(--repair-soft); color:var(--repair); border:none;
-    padding:7px 11px; border-radius:99px; font-size:12.5px; font-weight:700;
-  }
-  .alert-pill .dot{ width:6px; height:6px; border-radius:50%; background:var(--repair); }
 
   .filters{
-    display:flex; gap:8px; padding:10px 18px 12px; overflow-x:auto;
-    flex-shrink:0; background:var(--bg); position:relative; z-index:5;
+    display:flex; gap:8px; padding:12px 18px 12px; overflow-x:auto;
+    flex-shrink:0; background:var(--cream); position:relative; z-index:5;
   }
   .filters::-webkit-scrollbar{ display:none; }
   .chip{
-    flex-shrink:0; border:1px solid var(--border); background:var(--card); color:var(--muted);
-    padding:7px 13px; border-radius:99px; font-size:13px; font-weight:600; cursor:pointer;
+    flex-shrink:0; border:1px solid var(--border); background:var(--cream-2); color:var(--ink);
+    padding:7px 14px; border-radius:99px; font-size:13px; font-weight:600; cursor:pointer;
     transition:background .15s, color .15s, border-color .15s;
   }
-  .chip.active{ background:var(--ink); border-color:var(--ink); color:var(--card); }
-  .chip .n{ opacity:.7; font-weight:600; }
+  .chip.active{ background:var(--olive); border-color:var(--olive); color:#fff; }
 
   /* ---------- Map ---------- */
-  .map-wrap{ position:relative; flex:1; overflow:hidden; background:var(--bg); }
+  .map-wrap{ position:relative; flex:1; overflow:hidden; background:var(--map-bg); }
   .map-bg{ position:absolute; inset:0; width:100%; height:100%; }
   .pins{ position:absolute; inset:0; }
 
   .pin{
-    position:absolute; transform:translate(-50%,-100%);
-    width:40px; height:48px; border:none; background:none; padding:0; cursor:pointer;
-    display:flex; flex-direction:column; align-items:center;
-    transition:opacity .2s, filter .2s;
+    position:absolute; transform:translate(-50%,-50%);
+    width:30px; height:30px; border:none; background:none; padding:0; cursor:pointer;
+    transition:opacity .2s;
   }
-  .pin.dim{ opacity:.28; pointer-events:none; }
-  .pin-badge{
-    width:34px; height:34px; border-radius:50% 50% 50% 3px; transform:rotate(45deg);
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 3px 8px rgba(0,0,0,.22);
-    border:2.5px solid var(--card);
+  .pin.dim{ opacity:.3; pointer-events:none; }
+  .pin-dot{
+    display:block; width:100%; height:100%; border-radius:50%;
+    border:2.5px solid var(--cream);
+    box-shadow:0 2px 7px rgba(0,0,0,.4);
+    transition:transform .15s;
   }
-  .pin-badge span{ transform:rotate(-45deg); font-size:13px; font-weight:800; color:#fff; }
-  .pin.status-ok .pin-badge{ background:var(--ok); }
-  .pin.status-low .pin-badge{ background:var(--low); }
-  .pin.status-repair .pin-badge{ background:var(--repair); }
-  .pin.pending .pin-badge{ box-shadow:0 0 0 4px var(--accent-soft), 0 3px 8px rgba(0,0,0,.22); }
-  .pin.pulse .pin-badge{ animation:pinPulse 1.1s ease-out 4; }
+  .pin.status-ok .pin-dot{ background:var(--olive); }
+  .pin.status-low .pin-dot{ background:var(--terracotta); }
+  .pin.status-repair .pin-dot{ background:var(--repair); }
+  .pin.pending .pin-dot{ box-shadow:0 0 0 5px rgba(124,111,196,.4), 0 2px 7px rgba(0,0,0,.4); }
+  .pin.pulse .pin-dot{ animation:pinPulse 1.1s ease-out 4; }
   @keyframes pinPulse{
-    0%{ box-shadow:0 0 0 0 rgba(220,76,76,.55), 0 3px 8px rgba(0,0,0,.22); }
-    100%{ box-shadow:0 0 0 14px rgba(220,76,76,0), 0 3px 8px rgba(0,0,0,.22); }
+    0%{ box-shadow:0 0 0 0 rgba(181,71,44,.55), 0 2px 7px rgba(0,0,0,.4); }
+    100%{ box-shadow:0 0 0 14px rgba(181,71,44,0), 0 2px 7px rgba(0,0,0,.4); }
   }
-  .pin.selected .pin-badge{ transform:rotate(45deg) scale(1.12); }
+  .pin.selected .pin-dot{ transform:scale(1.2); }
 
   .map-legend{
     position:absolute; left:14px; bottom:14px; z-index:4;
-    background:var(--card); border:1px solid var(--border); border-radius:12px;
-    padding:8px 10px; display:flex; gap:10px; font-size:11px; color:var(--muted); font-weight:600;
-    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    background:var(--cream); border-radius:12px;
+    padding:8px 10px; display:flex; gap:10px; font-size:11px; color:var(--ink); font-weight:600;
+    box-shadow:0 6px 18px rgba(0,0,0,.18);
   }
   .map-legend .item{ display:flex; align-items:center; gap:5px; }
   .map-legend .sw{ width:8px; height:8px; border-radius:50%; }
 
   /* ---------- Sheets (shared) ---------- */
   .scrim{
-    position:absolute; inset:0; background:rgba(10,10,12,.32);
+    position:absolute; inset:0; background:rgba(20,17,10,.36);
     opacity:0; pointer-events:none; transition:opacity .25s; z-index:10;
   }
   .scrim.show{ opacity:1; pointer-events:auto; }
@@ -139,7 +120,7 @@
     position:absolute; left:0; right:0; bottom:0; z-index:20;
     height:78%; background:var(--card);
     border-radius:22px 22px 0 0;
-    box-shadow:0 -14px 40px rgba(0,0,0,.18);
+    box-shadow:0 -14px 40px rgba(0,0,0,.22);
     display:flex; flex-direction:column;
     transform:translateY(100%);
     transition:transform .32s cubic-bezier(.22,.9,.34,1);
@@ -154,73 +135,98 @@
 
   .sheet-content{ flex:1; overflow-y:auto; padding:2px 20px calc(env(safe-area-inset-bottom,0px) + 18px); -webkit-overflow-scrolling:touch; }
 
-  .sheet-top{ display:flex; justify-content:space-between; align-items:flex-start; padding-top:6px; }
-  .sheet-title{ font-size:18px; font-weight:800; letter-spacing:-0.01em; }
-  .sheet-addr{ font-size:13px; color:var(--muted); margin-top:2px; }
+  /* ---------- Machine card (peek) ---------- */
+  .m-hero{
+    position:relative; height:118px; border-radius:16px; overflow:hidden;
+    margin-top:4px; display:flex; align-items:center; justify-content:center;
+  }
+  .m-hero-icon{ font-size:42px; }
+  .m-hero-close{
+    position:absolute; top:10px; left:10px; width:28px; height:28px; border-radius:50%;
+    border:none; background:rgba(255,255,255,.85); color:var(--ink); font-size:14px; font-weight:700; cursor:pointer;
+  }
+  .m-status-pill{
+    position:absolute; top:10px; right:10px; padding:6px 12px; border-radius:99px;
+    font-size:11.5px; font-weight:800; background:rgba(255,255,255,.92);
+  }
+
+  .m-tags{ display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
+  .tag{
+    border:1px solid var(--border); background:var(--cream); color:var(--muted);
+    padding:5px 10px; border-radius:8px; font-size:10.5px; font-weight:700;
+    letter-spacing:.03em; text-transform:uppercase;
+  }
+
+  .m-meta-row{ display:flex; gap:16px; margin-top:12px; }
+  .meta-item{ font-size:12.5px; color:var(--muted); font-weight:600; display:flex; align-items:center; gap:5px; }
+
+  .m-title-row{ display:flex; align-items:center; justify-content:space-between; margin-top:14px; gap:10px; }
+  .m-title{ font-size:19px; font-weight:800; letter-spacing:-0.01em; color:var(--ink); }
+  .view-details-btn{
+    flex-shrink:0; border:none; background:var(--olive); color:#fff;
+    padding:9px 14px; border-radius:10px; font-size:12.5px; font-weight:700; cursor:pointer;
+    display:flex; align-items:center; gap:5px;
+  }
+
+  /* ---------- Detail view (expanded) ---------- */
+  .d-top{ display:flex; align-items:center; justify-content:space-between; padding-top:6px; }
+  .back-chevron{
+    width:30px; height:30px; border-radius:50%; border:none; background:var(--cream);
+    color:var(--ink); font-size:15px; font-weight:700; cursor:pointer; flex-shrink:0;
+  }
+  .d-title{ font-size:16px; font-weight:800; }
+  .d-addr{ font-size:12px; color:var(--muted); margin-top:1px; }
   .close-x{
-    width:30px; height:30px; border-radius:50%; border:none; background:var(--bg);
-    color:var(--muted); font-size:15px; font-weight:700; cursor:pointer; flex-shrink:0;
+    width:28px; height:28px; border-radius:50%; border:none; background:var(--cream);
+    color:var(--muted); font-size:14px; font-weight:700; cursor:pointer; flex-shrink:0;
   }
 
   .status-pill{
     display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:99px;
-    font-size:12px; font-weight:700; margin-top:10px;
+    font-size:12px; font-weight:700; margin-top:12px;
   }
   .status-pill .dot{ width:7px; height:7px; border-radius:50%; }
-  .status-pill.ok{ background:var(--ok-soft); color:var(--ok); }
-  .status-pill.ok .dot{ background:var(--ok); }
-  .status-pill.low{ background:var(--low-soft); color:var(--low); }
-  .status-pill.low .dot{ background:var(--low); }
-  .status-pill.repair{ background:var(--repair-soft); color:var(--repair); }
+  .status-pill.ok{ background:var(--olive-tint); color:var(--olive); }
+  .status-pill.ok .dot{ background:var(--olive); }
+  .status-pill.low{ background:var(--terracotta-tint); color:var(--terracotta); }
+  .status-pill.low .dot{ background:var(--terracotta); }
+  .status-pill.repair{ background:var(--repair-tint); color:var(--repair); }
   .status-pill.repair .dot{ background:var(--repair); }
-  .status-pill.pending{ background:var(--accent-soft); color:var(--accent); }
-  .status-pill.pending .dot{ background:var(--accent); animation:blink 1.1s infinite; }
+  .status-pill.pending{ background:var(--purple-tint); color:var(--purple); }
+  .status-pill.pending .dot{ background:var(--purple); animation:blink 1.1s infinite; }
   @keyframes blink{ 50%{ opacity:.25; } }
 
   .fault-note{
-    margin-top:10px; background:var(--repair-soft); color:var(--repair);
+    margin-top:10px; background:var(--repair-tint); color:var(--repair);
     border-radius:12px; padding:10px 12px; font-size:13px; font-weight:600;
   }
 
   .stat-row{ display:flex; gap:10px; margin-top:14px; }
-  .stat-box{ flex:1; background:var(--bg); border-radius:12px; padding:10px 12px; }
+  .stat-box{ flex:1; background:var(--cream); border-radius:12px; padding:10px 12px; }
   .stat-box .v{ font-size:15px; font-weight:800; }
   .stat-box .l{ font-size:11px; color:var(--muted); font-weight:600; margin-top:1px; }
 
-  .section-label{ font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin:20px 0 10px; }
+  .section-label{ font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin:20px 0 4px; }
 
-  .inv-row{ display:flex; align-items:center; gap:10px; padding:8px 0; }
-  .inv-name{ width:96px; flex-shrink:0; font-size:13.5px; font-weight:600; }
-  .inv-bar{ flex:1; height:7px; border-radius:99px; background:var(--bg); overflow:hidden; }
-  .inv-fill{ height:100%; border-radius:99px; }
-  .inv-qty{ width:44px; flex-shrink:0; text-align:right; font-size:12px; color:var(--muted); font-weight:600; font-variant-numeric:tabular-nums; }
+  .inv-row{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); }
+  .inv-row:last-child{ border-bottom:none; }
+  .inv-name{ font-size:13.5px; font-weight:600; }
+  .inv-qty{ display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--muted); font-weight:600; font-variant-numeric:tabular-nums; }
+  .inv-dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 
-  .inv-summary{ font-size:13.5px; color:var(--muted); margin-top:8px; font-weight:500; }
-  .inv-summary b{ color:var(--ink); font-weight:700; }
-
-  .action-row{ display:flex; gap:10px; margin-top:18px; }
+  .action-row{ display:flex; gap:10px; margin-top:20px; }
   .btn{
     flex:1; border:none; border-radius:13px; padding:13px 10px; font-size:14.5px; font-weight:700;
     cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;
   }
-  .btn-primary{ background:var(--accent); color:#fff; }
-  .btn-secondary{ background:var(--bg); color:var(--ink); }
+  .btn-primary{ background:var(--olive); color:#fff; }
+  .btn-secondary{ background:var(--cream); color:var(--ink); }
   .btn-secondary.repair-tone{ color:var(--repair); }
-  .btn[disabled]{ background:var(--accent-soft); color:var(--accent); opacity:.85; cursor:default; }
-  .btn-full{ width:100%; margin-top:18px; }
-
-  .expand-hint{
-    width:100%; background:none; border:none; text-align:center; color:var(--faint);
-    font-size:12px; font-weight:600; padding:14px 0 2px; cursor:pointer;
-  }
+  .btn[disabled]{ background:var(--purple-tint); color:var(--purple); opacity:.9; cursor:default; }
 
   /* ---------- Dispatch sheet ---------- */
   .dispatch-sheet{ z-index:25; }
   .dispatch-header{ display:flex; align-items:center; gap:10px; padding-top:6px; }
-  .back-chevron{
-    width:30px; height:30px; border-radius:50%; border:none; background:var(--bg);
-    color:var(--ink); font-size:15px; font-weight:700; cursor:pointer; flex-shrink:0;
-  }
   .dispatch-title{ font-size:17px; font-weight:800; }
   .dispatch-sub{ font-size:12.5px; color:var(--muted); margin-top:1px; }
 
@@ -229,47 +235,61 @@
   }
   .provider-card:last-child{ border-bottom:none; }
   .avatar{
-    width:42px; height:42px; border-radius:50%; background:var(--accent-soft); color:var(--accent);
+    width:42px; height:42px; border-radius:50%; background:var(--olive-tint); color:var(--olive);
     display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px; flex-shrink:0;
   }
   .provider-info{ flex:1; min-width:0; }
   .provider-name{ font-size:14.5px; font-weight:700; }
   .provider-meta{ font-size:12px; color:var(--muted); margin-top:2px; }
   .provider-avail{ font-size:12px; font-weight:700; margin-top:4px; display:inline-flex; align-items:center; gap:5px; }
-  .provider-avail.now{ color:var(--ok); }
-  .provider-avail.soon{ color:var(--low); }
+  .provider-avail.now{ color:var(--olive); }
+  .provider-avail.soon{ color:var(--terracotta); }
   .provider-avail.later{ color:var(--muted); }
   .provider-avail .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
   .select-btn{
-    flex-shrink:0; border:none; background:var(--ink); color:var(--card); font-size:12.5px; font-weight:700;
+    flex-shrink:0; border:none; background:var(--olive-deep); color:#fff; font-size:12.5px; font-weight:700;
     padding:9px 14px; border-radius:10px; cursor:pointer;
   }
 
   /* ---------- Toasts ---------- */
   .toast-stack{
     position:absolute; left:12px; right:12px; bottom:calc(env(safe-area-inset-bottom,0px) + 16px);
-    z-index:60; display:flex; flex-direction:column-reverse; gap:8px; pointer-events:none;
+    z-index:60; display:flex; flex-direction:column; gap:8px; pointer-events:none;
     transition:bottom .3s cubic-bezier(.22,.9,.34,1);
   }
   .toast{
-    pointer-events:auto; display:flex; align-items:flex-start; gap:10px;
-    background:var(--ink); color:#fff; border-radius:14px; padding:12px 14px;
-    box-shadow:0 10px 26px rgba(0,0,0,.28);
+    pointer-events:auto; background:var(--olive-deep); color:#fff; border-radius:16px; padding:14px 16px;
+    box-shadow:0 10px 26px rgba(0,0,0,.32);
     transform:translateX(0); opacity:1;
     transition:transform .28s ease, opacity .28s ease;
   }
-  @media (prefers-color-scheme: dark){ .toast{ background:#2A2C33; } }
   .toast.out{ transform:translateX(-130%); opacity:0; }
   .toast.dragging{ transition:none; }
-  .toast-icon{
-    width:22px; height:22px; border-radius:50%; flex-shrink:0; margin-top:1px;
+
+  .toast-heading{ font-size:19px; font-weight:800; letter-spacing:-0.01em; }
+  .toast-sub{ font-size:13px; color:rgba(255,255,255,.72); margin-top:2px; }
+
+  .tracker{ display:flex; align-items:center; margin:16px 0 12px; }
+  .tnode{
+    width:32px; height:32px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:14px;
+    background:rgba(255,255,255,.12); color:rgba(255,255,255,.5);
+  }
+  .tnode.done{ background:var(--cream); color:var(--olive-deep); }
+  .tline{ flex:1; height:3px; background:rgba(255,255,255,.16); margin:0 2px; }
+  .tline.done{ background:var(--cream); }
+
+  .toast-eta{ display:flex; justify-content:space-between; align-items:flex-end; }
+  .eta-label{ font-size:11px; color:rgba(255,255,255,.65); font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+  .eta-time{ font-size:27px; font-weight:800; letter-spacing:.01em; font-variant-numeric:tabular-nums; margin-top:2px; }
+
+  .toast-icon-row{ display:flex; align-items:flex-start; gap:10px; }
+  .toast-icon-sm{
+    width:22px; height:22px; border-radius:50%; flex-shrink:0; margin-top:1px; background:var(--repair);
     display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;
   }
-  .toast.success .toast-icon{ background:var(--ok); }
-  .toast.alert .toast-icon{ background:var(--repair); }
-  .toast.info .toast-icon{ background:var(--accent); }
-  .toast-title{ font-size:13.5px; font-weight:700; }
-  .toast-message{ font-size:12.5px; color:#D8D9DE; margin-top:1px; line-height:1.35; }
+  .toast-heading-sm{ font-size:13.5px; font-weight:700; }
+  .toast-sub-sm{ font-size:12.5px; color:rgba(255,255,255,.72); margin-top:1px; line-height:1.35; }
 </style>
 </head>
 <body>
@@ -278,38 +298,29 @@
   <div class="app" id="app">
 
     <header class="topbar">
-      <div>
-        <div class="brand">VendOps</div>
-        <div class="brand-sub" id="brandSub">8 machines &middot; on route</div>
-      </div>
-      <button class="alert-pill" id="alertPill" type="button">
-        <span class="dot"></span><span id="alertCount">0</span> need attention
-      </button>
+      <div class="brand">VendOps</div>
+      <div class="brand-sub" id="brandSub">8 machines on route</div>
     </header>
 
     <div class="filters" id="filters"></div>
 
     <div class="map-wrap" id="mapWrap">
-      <svg class="map-bg" viewBox="0 0 428 620" preserveAspectRatio="xMidYMid slice">
-        <rect x="0" y="0" width="428" height="620" fill="var(--bg)"/>
-        <rect x="20" y="40" width="130" height="100" rx="10" fill="var(--map-block)"/>
-        <rect x="270" y="20" width="120" height="140" rx="10" fill="var(--map-block)"/>
-        <rect x="40" y="220" width="150" height="110" rx="10" fill="var(--map-block)"/>
-        <rect x="240" y="260" width="150" height="130" rx="10" fill="var(--map-block)"/>
-        <rect x="30" y="410" width="160" height="150" rx="10" fill="var(--map-block)"/>
-        <rect x="250" y="430" width="150" height="140" rx="10" fill="var(--map-block)"/>
-        <circle cx="360" cy="120" r="46" fill="var(--map-green)"/>
-        <circle cx="95" cy="380" r="40" fill="var(--map-green)"/>
-        <path d="M0,180 C120,150 300,210 428,175" stroke="var(--map-road)" stroke-width="16" fill="none" stroke-linecap="round"/>
-        <path d="M0,350 C140,390 280,320 428,360" stroke="var(--map-road)" stroke-width="16" fill="none" stroke-linecap="round"/>
-        <path d="M0,520 C150,490 260,545 428,515" stroke="var(--map-road)" stroke-width="16" fill="none" stroke-linecap="round"/>
-        <path d="M140,0 C170,150 110,420 150,620" stroke="var(--map-road)" stroke-width="14" fill="none" stroke-linecap="round"/>
-        <path d="M320,0 C300,180 350,400 300,620" stroke="var(--map-road)" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <svg class="map-bg" viewBox="30 15 370 590" preserveAspectRatio="xMidYMid slice">
+        <rect x="0" y="0" width="428" height="620" fill="var(--map-bg)"/>
+        <rect x="0" y="95" width="428" height="20" fill="var(--map-road)"/>
+        <rect x="0" y="235" width="428" height="18" fill="var(--map-road)"/>
+        <rect x="0" y="375" width="428" height="20" fill="var(--map-road)"/>
+        <rect x="0" y="515" width="428" height="18" fill="var(--map-road)"/>
+        <rect x="85" y="0" width="18" height="620" fill="var(--map-road)"/>
+        <rect x="185" y="0" width="20" height="620" fill="var(--map-road)"/>
+        <rect x="290" y="0" width="18" height="620" fill="var(--map-road)"/>
+        <rect x="375" y="0" width="18" height="620" fill="var(--map-road)"/>
+        <path d="M-20,460 C50,430 110,510 60,600 C30,640 -20,630 -20,630 Z" fill="var(--map-water)"/>
       </svg>
       <div class="pins" id="pins"></div>
       <div class="map-legend">
-        <div class="item"><span class="sw" style="background:var(--ok)"></span>Stocked</div>
-        <div class="item"><span class="sw" style="background:var(--low)"></span>Low</div>
+        <div class="item"><span class="sw" style="background:var(--olive)"></span>Stocked</div>
+        <div class="item"><span class="sw" style="background:var(--terracotta)"></span>Low</div>
         <div class="item"><span class="sw" style="background:var(--repair)"></span>Repair</div>
       </div>
     </div>
@@ -334,21 +345,21 @@
 (function(){
 
   var machines = [
-    { id:1, code:"VM-114", addr:"5th Ave & Elm St", x:24, y:16, status:"ok", uptime:"99.4%", lastService:"Jul 10",
+    { id:1, code:"VM-114", addr:"5th Ave & Elm St", x:24, y:16, status:"ok", uptime:"99.4%", lastService:"Jul 10", tags:["Beverages","Snacks"],
       inventory:[ {name:"Cola",qty:11,cap:12},{name:"Water",qty:9,cap:12},{name:"Chips",qty:10,cap:12},{name:"Chocolate",qty:8,cap:10} ] },
-    { id:2, code:"VM-201", addr:"Harbor Plaza, Level 1", x:66, y:12, status:"low", uptime:"98.1%", lastService:"Jul 6",
+    { id:2, code:"VM-201", addr:"Harbor Plaza, Level 1", x:66, y:12, status:"low", uptime:"98.1%", lastService:"Jul 6", tags:["Beverages","Snacks"],
       inventory:[ {name:"Cola",qty:2,cap:12},{name:"Water",qty:7,cap:12},{name:"Chips",qty:1,cap:10},{name:"Granola Bar",qty:9,cap:10} ] },
-    { id:3, code:"VM-078", addr:"Union Station, Concourse", x:42, y:33, status:"ok", uptime:"99.8%", lastService:"Jul 12",
+    { id:3, code:"VM-078", addr:"Union Station, Concourse", x:42, y:33, status:"ok", uptime:"99.8%", lastService:"Jul 12", tags:["Beverages","Candy"],
       inventory:[ {name:"Cola",qty:10,cap:12},{name:"Juice",qty:8,cap:10},{name:"Chips",qty:9,cap:12},{name:"Gum",qty:14,cap:16} ] },
-    { id:4, code:"VM-330", addr:"Riverside Tech Park, Bldg C", x:80, y:30, status:"ok", uptime:"97.6%", lastService:"Jul 9",
+    { id:4, code:"VM-330", addr:"Riverside Tech Park, Bldg C", x:80, y:30, status:"ok", uptime:"97.6%", lastService:"Jul 9", tags:["Energy","Snacks"],
       inventory:[ {name:"Energy Drink",qty:9,cap:12},{name:"Water",qty:11,cap:12},{name:"Chocolate",qty:7,cap:10},{name:"Chips",qty:8,cap:12} ] },
-    { id:5, code:"VM-092", addr:"Maple Street Market", x:16, y:50, status:"ok", uptime:"99.0%", lastService:"Jul 8",
+    { id:5, code:"VM-092", addr:"Maple Street Market", x:16, y:50, status:"ok", uptime:"99.0%", lastService:"Jul 8", tags:["Beverages","Candy"],
       inventory:[ {name:"Cola",qty:9,cap:12},{name:"Water",qty:8,cap:12},{name:"Gum",qty:12,cap:16},{name:"Juice",qty:6,cap:10} ] },
-    { id:6, code:"VM-255", addr:"Central Library, Foyer", x:58, y:54, status:"repair", uptime:"81.2%", lastService:"Jun 29",
+    { id:6, code:"VM-255", addr:"Central Library, Foyer", x:58, y:54, status:"repair", uptime:"81.2%", lastService:"Jun 29", tags:["Beverages","Snacks"],
       fault:"Card reader offline — cash only", inventory:[ {name:"Cola",qty:6,cap:12},{name:"Water",qty:9,cap:12},{name:"Chips",qty:5,cap:12},{name:"Chocolate",qty:4,cap:10} ] },
-    { id:7, code:"VM-410", addr:"Southgate Fitness Center", x:31, y:70, status:"ok", uptime:"98.9%", lastService:"Jul 11",
+    { id:7, code:"VM-410", addr:"Southgate Fitness Center", x:31, y:70, status:"ok", uptime:"98.9%", lastService:"Jul 11", tags:["Energy","Beverages"],
       inventory:[ {name:"Energy Drink",qty:10,cap:12},{name:"Water",qty:12,cap:12},{name:"Granola Bar",qty:8,cap:10},{name:"Juice",qty:7,cap:10} ] },
-    { id:8, code:"VM-166", addr:"Elm & 9th Office Tower", x:73, y:74, status:"low", uptime:"96.4%", lastService:"Jul 4",
+    { id:8, code:"VM-166", addr:"Elm & 9th Office Tower", x:73, y:74, status:"low", uptime:"96.4%", lastService:"Jul 4", tags:["Beverages","Snacks"],
       inventory:[ {name:"Cola",qty:1,cap:12},{name:"Water",qty:3,cap:12},{name:"Chips",qty:8,cap:12},{name:"Chocolate",qty:2,cap:10} ] }
   ];
 
@@ -376,21 +387,24 @@
   var dispatchSheet = document.getElementById("dispatchSheet");
   var dispatchContent = document.getElementById("dispatchSheetContent");
   var toastStack = document.getElementById("toastStack");
-  var alertPill = document.getElementById("alertPill");
-  var alertCount = document.getElementById("alertCount");
   var brandSub = document.getElementById("brandSub");
 
   function machineById(id){ return machines.filter(function(m){ return m.id===id; })[0]; }
   function needsAttention(m){ return m.status==="low" || m.status==="repair"; }
 
-  function fillColor(pct){
-    if (pct < 30) return "var(--repair)";
-    if (pct < 55) return "var(--low)";
-    return "var(--ok)";
-  }
-
   function statusLabel(s){
     return s==="ok" ? "Fully stocked" : s==="low" ? "Low stock" : "Needs repair";
+  }
+  function heroTint(s){
+    return s==="ok" ? "var(--olive-tint)" : s==="low" ? "var(--terracotta-tint)" : "var(--repair-tint)";
+  }
+  function statusTextColor(s){
+    return s==="ok" ? "var(--olive)" : s==="low" ? "var(--terracotta)" : "var(--repair)";
+  }
+  function dotColor(pct){
+    if (pct < 30) return "var(--repair)";
+    if (pct < 55) return "var(--terracotta)";
+    return "var(--olive)";
   }
 
   /* ---------- Header / filters ---------- */
@@ -401,18 +415,13 @@
   ];
 
   function renderHeader(){
-    var attn = machines.filter(needsAttention).length;
-    alertCount.textContent = attn;
-    alertPill.style.visibility = attn ? "visible" : "hidden";
-    brandSub.textContent = machines.length + " machines · on route";
-
+    brandSub.textContent = machines.length + " machines on route";
     filtersEl.innerHTML = "";
     filterDefs.forEach(function(f){
-      var n = f.key==="all" ? machines.length : machines.filter(function(m){ return m.status===f.key; }).length;
       var b = document.createElement("button");
       b.className = "chip" + (state.filter===f.key ? " active" : "");
       b.type = "button";
-      b.innerHTML = f.label + ' <span class="n">' + n + "</span>";
+      b.textContent = f.label;
       b.addEventListener("click", function(){ state.filter = f.key; renderAll(); });
       filtersEl.appendChild(b);
     });
@@ -428,7 +437,7 @@
       btn.style.left = m.x + "%";
       btn.style.top = m.y + "%";
       btn.setAttribute("aria-label", m.code + " — " + statusLabel(m.status));
-      btn.innerHTML = '<span class="pin-badge"><span>' + (m.pending ? "…" : m.code.slice(-2)) + "</span></span>";
+      btn.innerHTML = '<span class="pin-dot"></span>';
       btn.addEventListener("click", function(){ openMachine(m.id); });
       pinsEl.appendChild(btn);
     });
@@ -479,8 +488,40 @@
   function renderMachineSheet(){
     var m = machineById(state.activeId);
     if (!m) return;
-    var lowCount = m.inventory.filter(function(i){ return i.qty/i.cap < 0.3; }).length;
 
+    if (machineSheetState !== "expanded"){
+      renderMachineCard(m);
+    } else {
+      renderMachineDetail(m);
+    }
+  }
+
+  function renderMachineCard(m){
+    var tagsHtml = m.tags.map(function(t){ return '<span class="tag">' + t + "</span>"; }).join("");
+    machineContent.innerHTML =
+      '<div class="m-hero" style="background:' + heroTint(m.status) + '">' +
+        '<button class="m-hero-close" id="mCloseBtn">✕</button>' +
+        '<span class="m-status-pill" style="color:' + statusTextColor(m.status) + '">' + statusLabel(m.status) + "</span>" +
+        '<span class="m-hero-icon">🥤</span>' +
+      "</div>" +
+      '<div class="m-tags">' + tagsHtml + "</div>" +
+      '<div class="m-meta-row">' +
+        '<span class="meta-item">📍 ' + m.addr + "</span>" +
+        '<span class="meta-item">🕐 Serviced ' + m.lastService + "</span>" +
+      "</div>" +
+      '<div class="m-title-row">' +
+        '<div class="m-title">' + m.code + "</div>" +
+        '<button class="view-details-btn" id="viewDetailsBtn">View details →</button>' +
+      "</div>";
+
+    document.getElementById("mCloseBtn").addEventListener("click", closeMachine);
+    document.getElementById("viewDetailsBtn").addEventListener("click", function(){
+      setMachineSheetState("expanded");
+      renderMachineSheet();
+    });
+  }
+
+  function renderMachineDetail(m){
     var pendingPill = "";
     if (m.pending){
       var label = m.pending==="restock" ? "Restock scheduled" : "Repair scheduled";
@@ -494,8 +535,7 @@
     var invRows = m.inventory.map(function(i){
       var pct = Math.round((i.qty/i.cap)*100);
       return '<div class="inv-row"><div class="inv-name">' + i.name + '</div>' +
-        '<div class="inv-bar"><div class="inv-fill" style="width:' + pct + '%;background:' + fillColor(pct) + '"></div></div>' +
-        '<div class="inv-qty">' + i.qty + "/" + i.cap + "</div></div>";
+        '<div class="inv-qty"><span class="inv-dot" style="background:' + dotColor(pct) + '"></span>' + i.qty + "/" + i.cap + "</div></div>";
     }).join("");
 
     var restockDisabled = m.pending==="restock" ? "disabled" : "";
@@ -504,31 +544,28 @@
     var repairLabel = m.pending==="repair" ? "Scheduled ✓" : "Report repair";
 
     machineContent.innerHTML =
-      '<div class="sheet-top">' +
-        '<div><div class="sheet-title">' + m.code + '</div><div class="sheet-addr">' + m.addr + "</div></div>" +
-        '<button class="close-x" id="mCloseBtn">✕</button>' +
+      '<div class="d-top">' +
+        '<button class="back-chevron" id="mBackBtn">‹</button>' +
+        '<div><div class="d-title">' + m.code + '</div><div class="d-addr">' + m.addr + "</div></div>" +
+        '<button class="close-x" id="mCloseBtn2">✕</button>' +
       "</div>" +
       pendingPill + faultHtml +
       '<div class="stat-row">' +
         '<div class="stat-box"><div class="v">' + m.uptime + '</div><div class="l">Uptime</div></div>' +
         '<div class="stat-box"><div class="v">' + m.lastService + '</div><div class="l">Last serviced</div></div>' +
-        '<div class="stat-box"><div class="v">' + lowCount + '</div><div class="l">Items low</div></div>' +
+        '<div class="stat-box"><div class="v">' + m.inventory.length + '</div><div class="l">Items tracked</div></div>' +
       "</div>" +
-      '<div class="inv-summary"><b>' + m.inventory.length + " items</b> tracked · tap Details to view levels</div>" +
+      '<div class="section-label">Inventory</div>' + invRows +
       '<div class="action-row">' +
         '<button class="btn btn-primary" id="restockBtn" ' + restockDisabled + '>↻ ' + restockLabel + "</button>" +
         '<button class="btn btn-secondary repair-tone" id="repairBtn" ' + repairDisabled + '>⚒ ' + repairLabel + "</button>" +
-      "</div>" +
-      '<button class="expand-hint" id="expandHint">' + (machineSheetState==="expanded" ? "▼  Hide inventory" : "▲  View inventory details") + "</button>" +
-      '<div id="expandedArea" style="display:' + (machineSheetState==="expanded" ? "block" : "none") + '">' +
-        '<div class="section-label">Inventory</div>' + invRows +
       "</div>";
 
-    document.getElementById("mCloseBtn").addEventListener("click", closeMachine);
-    document.getElementById("expandHint").addEventListener("click", function(){
-      setMachineSheetState(machineSheetState==="expanded" ? "peek" : "expanded");
+    document.getElementById("mBackBtn").addEventListener("click", function(){
+      setMachineSheetState("peek");
       renderMachineSheet();
     });
+    document.getElementById("mCloseBtn2").addEventListener("click", closeMachine);
     if (!restockDisabled) document.getElementById("restockBtn").addEventListener("click", function(){ openDispatch("restock"); });
     if (!repairDisabled) document.getElementById("repairBtn").addEventListener("click", function(){ openDispatch("repair"); });
   }
@@ -538,14 +575,12 @@
     state.dispatchType = type;
     renderDispatchSheet();
     dispatchSheet.classList.add("expanded");
-    setMachineSheetState("peek");
     updateToastOffset();
   }
 
   function closeDispatch(silent){
     dispatchSheet.classList.remove("expanded");
     state.dispatchType = null;
-    if (!silent) setMachineSheetState("peek");
     updateToastOffset();
   }
 
@@ -555,13 +590,12 @@
     var list = isRestock ? distributors : technicians;
 
     var rows = list.map(function(p){
-      var availClass = p.avail;
       return '<div class="provider-card">' +
         '<div class="avatar">' + p.initials + '</div>' +
         '<div class="provider-info">' +
           '<div class="provider-name">' + p.name + " · ★" + p.rating + "</div>" +
           '<div class="provider-meta">' + p.meta + "</div>" +
-          '<div class="provider-avail ' + availClass + '"><span class="dot"></span>' + p.availText + "</div>" +
+          '<div class="provider-avail ' + p.avail + '"><span class="dot"></span>' + p.availText + "</div>" +
         "</div>" +
         '<button class="select-btn" data-id="' + p.id + '">Dispatch</button>' +
       "</div>";
@@ -591,11 +625,9 @@
     renderMachineSheet();
     renderPins();
 
-    showToast({
-      type:"success",
-      title:(type==="restock" ? "Restock dispatched" : "Repair dispatched"),
-      message: provider.name + " is headed to " + m.code + " — " + provider.availText.toLowerCase()
-    });
+    toastStatus(type, "dispatched", "On the way",
+      provider.name + " is headed to " + m.code,
+      "Estimated arrival", estimateTimeLabel(provider.availText));
 
     setTimeout(function(){ completeDispatch(m, provider, type); }, 6000);
   }
@@ -613,27 +645,42 @@
     renderHeader();
     if (state.activeId===m.id) renderMachineSheet();
 
-    showToast({
-      type:"success",
-      title: type==="restock" ? "Restock complete" : "Repair complete",
-      message: m.code + " is back to full status — thanks to " + provider.name
-    });
+    toastStatus(type, "complete", type==="restock" ? "Delivered" : "Repaired",
+      m.code + " is back to full status", "Completed at", formatTime(new Date()));
+  }
+
+  /* ---------- Time helpers ---------- */
+  function formatTime(d){
+    var hh = d.getHours(), mm = d.getMinutes();
+    return (hh<10?"0"+hh:hh) + ":" + (mm<10?"0"+mm:mm);
+  }
+  function estimateTimeLabel(availText){
+    var now = new Date();
+    if (/now/i.test(availText)) return formatTime(now);
+    var m = availText.match(/(\d+)\s*min/i);
+    if (m) return formatTime(new Date(now.getTime() + parseInt(m[1],10)*60000));
+    var t = availText.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+    if (t){
+      var hh = parseInt(t[1],10), mm = parseInt(t[2],10), ap = t[3];
+      if (ap && /PM/i.test(ap) && hh<12) hh += 12;
+      if (ap && /AM/i.test(ap) && hh===12) hh = 0;
+      var d2 = new Date(now); d2.setHours(hh, mm, 0, 0);
+      return formatTime(d2);
+    }
+    return availText;
   }
 
   /* ---------- Toasts ---------- */
-  function showToast(opts){
+  function pushToast(cls, html, dismissMs){
     while (toastStack.children.length >= 3){
       toastStack.removeChild(toastStack.firstChild);
     }
-    var icon = opts.type==="success" ? "✓" : opts.type==="alert" ? "!" : "i";
     var el = document.createElement("div");
-    el.className = "toast " + opts.type;
-    el.innerHTML =
-      '<div class="toast-icon">' + icon + "</div>" +
-      '<div><div class="toast-title">' + opts.title + '</div><div class="toast-message">' + opts.message + "</div></div>";
+    el.className = "toast " + cls;
+    el.innerHTML = html;
     toastStack.appendChild(el);
 
-    var dismissTimer = setTimeout(function(){ dismissToast(el); }, 4800);
+    var dismissTimer = setTimeout(function(){ dismissToast(el); }, dismissMs);
 
     var startX = null, dx = 0, dragging = false;
     el.addEventListener("pointerdown", function(e){
@@ -669,6 +716,36 @@
     el.style.transform = "";
     el.classList.add("out");
     setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); }, 300);
+  }
+
+  function trackerHTML(type, complete){
+    var icons = type==="restock" ? ["📦","🚚","✓"] : ["🛠","🔧","✓"];
+    var accent = type==="restock" ? "var(--terracotta)" : "var(--purple)";
+    var states = complete ? ["done","done","done"] : ["done","current","upcoming"];
+    var html = "";
+    for (var i=0;i<3;i++){
+      var st = states[i];
+      var styleAttr = st==="current" ? (' style="background:' + accent + ';color:#fff;"') : "";
+      html += '<div class="tnode ' + st + '"' + styleAttr + '>' + icons[i] + "</div>";
+      if (i<2) html += '<div class="tline' + (states[i]==="done" ? " done" : "") + '"></div>';
+    }
+    return '<div class="tracker">' + html + "</div>";
+  }
+
+  function toastStatus(type, stage, heading, sub, etaLabel, etaTime){
+    var html =
+      '<div class="toast-heading">' + heading + "</div>" +
+      '<div class="toast-sub">' + sub + "</div>" +
+      trackerHTML(type, stage==="complete") +
+      '<div class="toast-eta"><div><div class="eta-label">' + etaLabel + '</div><div class="eta-time">' + etaTime + "</div></div></div>";
+    pushToast("toast-status", html, 6500);
+  }
+
+  function toastAlert(title, message){
+    var html =
+      '<div class="toast-icon-row"><div class="toast-icon-sm">!</div>' +
+      '<div><div class="toast-heading-sm">' + title + '</div><div class="toast-sub-sm">' + message + "</div></div></div>";
+    pushToast("toast-alert", html, 4800);
   }
 
   /* ---------- Drag-to-resize for machine sheet ---------- */
@@ -721,7 +798,6 @@
   });
 
   scrimEl.addEventListener("click", closeMachine);
-  alertPill.addEventListener("click", function(){ state.filter = "low"; renderAll(); });
 
   /* ---------- Simulated live update ---------- */
   setTimeout(function(){
@@ -731,11 +807,7 @@
     target.fault = "Cooling unit running warm";
     target._pulse = true;
     renderAll();
-    showToast({
-      type:"alert",
-      title:"New alert",
-      message: target.code + " at " + target.addr + " flagged a fault"
-    });
+    toastAlert("New alert", target.code + " at " + target.addr + " flagged a fault");
     setTimeout(function(){ target._pulse = false; renderPins(); }, 5000);
   }, 3500);
 
